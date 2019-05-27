@@ -3,6 +3,7 @@ import MainRouter from '../MainRouter/MainRouter';
 import Navbar from '../Navbar/Navbar';
 import '../style.css';
 
+
 class App extends Component {
   render() {
     //here insert footer, header

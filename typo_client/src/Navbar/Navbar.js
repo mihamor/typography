@@ -5,37 +5,55 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import 'react-sticky-header/styles.css';
 import Sticky from 'react-stickynode';
+import { connect } from 'react-redux';
 
 
 class Navbar extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { user: props.user, isLoggedIn: props.user ? true : false };
+    this.state = { location : "None" };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    if( nextProps.location && 
+      nextProps.location!==prevState.location){
+      return { location: nextProps.location};
+   }
+   else return null;
+  }
+ 
+ componentDidUpdate(prevProps, prevState) {
+   if(prevProps.location !== this.props.location){
+     //Perform some operation here
+     this.setState({location: this.props.location});
+   }
   }
 
   render() {
+    // console.log(this.state.location);
     return (
-    <div className="header">
+    <div className="helocader">
       <PhotoSlider/>
       <Sticky innerZ={100}>
-      <ul class="navbar">
+      <ul className="navbar">
         <li className="navbar__button">
-          <a className="navbar__link navbar__link_active" href="#home">Home</a>
+          <Link className="navbar__link" to="/">Home</Link>
         </li>
         <li className="navbar__button">
-          <a className="navbar__link" href="#news">News</a>
+          <Link className="navbar__link" to="/offers">Offers</Link>
         </li>
         <li className="navbar__button">
-          <a className="navbar__link" href="#contact">Contact</a>
+          <Link className="navbar__link" to="/contact">Contact</Link>
         </li>
         <li className="navbar__button">
-          <a className="navbar__link" href="#about">About</a>
+          <Link className="navbar__link" to="/about">About</Link>
         </li>
         <li className="navbar__button-right">
           <span className="navbar__logo">KPI Typography</span>
         </li>
       </ul>
+      {/* <BreadcrumbsItem to='/'>Home</BreadcrumbsItem> */}
       </Sticky>
     </div>
     );
@@ -71,5 +89,6 @@ const PhotoSlider = () => {
     </div>
   );
 };
+
 
 export default Navbar;
