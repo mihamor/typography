@@ -1,4 +1,4 @@
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 import React, { Component } from 'react';
 import Home from '../Home/Home';
 import Contact from '../Contact/Contact';
@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { changeLocation } from '../actions/location';
 import '../style.css';
 import images from './images';
+import Offers from '../Offers/Offers';
 
 class MainRouter extends Component{
   constructor(props){
@@ -14,23 +15,6 @@ class MainRouter extends Component{
     this.state = { location : "home" };
     this.onRouteChanged = props.changeCurrLocation;
   }
-
-  // componentDidMount(){
-  //   console.log(this.props.location);
-  //   this.onRouteChanged({
-  //     newLocation : this.props.location
-  //   });
-  // }
-
-
-  // componentDidUpdate(prevProps) {
-  //   console.log(this.props.location);
-  //   if (this.props.location !== prevProps.location) {
-  //     this.onRouteChanged({
-  //       newLocation : this.props.location
-  //     });
-  //   }
-  // }
   render() {
     return (
         <main className="content">
@@ -39,7 +23,8 @@ class MainRouter extends Component{
             exact path="/"
             render={props => <Home user={this.state.user} images={images}/>}
             />
-             <Route path='/contact' component={Contact}/>
+            <Route path='/contact' component={Contact}/>
+            <Route path='/offers' component={Offers}/>
             {/* <Route path='/profile' render={props => <Redirect to={path_to_user}/>}/>
             <Route path='/developer/v3' component={ApiInfo}/>
             {/*
