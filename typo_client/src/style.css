@@ -22,7 +22,7 @@ html{
 }
 .contact{
   height: 100%;
-  background-color: lightgray;
+  background-color: whitesmoke;
 }
 
 .info{
@@ -80,7 +80,7 @@ h1{
   background-color: white;
 }
 .slider{
-  height:80%;
+  height:70%;
   overflow: hidden;
   background-color: #f1f1f1;;
 }
@@ -98,52 +98,60 @@ h1{
   height: 20%;
 }
 
-
-
-.navbar{
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  min-height: 40px;
-  top: 0;
-  background-color:  #f1f1f1;;
+.custom-navbar__wrapper {
+  height: 30%;
 }
-.navbar__link{
-  display: inline-block;
-  color:  gray;
-  font-size: 1.4rem;
-  text-align: center;
-  padding-left: 30px;
-  padding-right: 30px;
-  vertical-align: middle;
-  line-height: 40px;
 
-  height: 100%;
-  text-decoration: none;
-}
-.navbar__logo{
-  display: block;
-  color:  gray;
+.custom-navbar{
+  height: 30%;
   font-size: 1.7rem;
-  text-align: center;
-  padding-left: 30px;
-  padding-right: 30px;
-  line-height: 40px;
 }
-.navbar__button{
+.custom-navbar__link{
+  color:  gray;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.custom-navbar__brand{
+  font-size: 2rem;
+}
+.custom-navbar__button{
   height: 100%;
   float: left;
 }
-.navbar__link:hover:not(.active) {color: #174fd1}
+.custom-navbar__link:hover:not(.active) {color: #174fd1}
 
-.navbar__link_active {color: #174fd1;}
+.custom-navbar__link_active {color: #174fd1;}
 
-.navbar__button-right {
+.custom-navbar__button-right {
   float: right;
   height: 100%;
 }
 @media screen and (max-width: 600px) {
-  .navbar__logo{
+  .custom-navbar__logo{
     display: none;
   }
+}
+
+
+.map-wrapper{
+  margin: 0 auto;
+  position: relative;
+  height: 70%;
+  width: 70%;
+  top: 5%;
+}
+.map__caption{
+  margin: 0 auto;
+  top: 10%;
+  position: relative;
+  font-size: 1.5rem;
+}
+.caption__heading{
+  font-size: 2rem;
+  color: gray;
+}
+
+
+.contact__container{
+  width: 80%;
 }

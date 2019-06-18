@@ -15,22 +15,22 @@ class MainRouter extends Component{
     this.onRouteChanged = props.changeCurrLocation;
   }
 
-  componentDidMount(){
-    console.log(this.props.location);
-    this.onRouteChanged({
-      newLocation : this.props.location
-    });
-  }
+  // componentDidMount(){
+  //   console.log(this.props.location);
+  //   this.onRouteChanged({
+  //     newLocation : this.props.location
+  //   });
+  // }
 
 
-  componentDidUpdate(prevProps) {
-    console.log(this.props.location);
-    if (this.props.location !== prevProps.location) {
-      this.onRouteChanged({
-        newLocation : this.props.location
-      });
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   console.log(this.props.location);
+  //   if (this.props.location !== prevProps.location) {
+  //     this.onRouteChanged({
+  //       newLocation : this.props.location
+  //     });
+  //   }
+  // }
   render() {
     return (
         <main className="content">
