@@ -70,7 +70,7 @@ html{
 .content{
   position: absolute;
   z-index: 1;
-  height: 80%;
+  height: 100%;
   width: 100%;
 }
 h1{
@@ -82,7 +82,7 @@ h1{
 .slider{
   height:80%;
   overflow: hidden;
-  background-color: lightpink;
+  background-color: #f1f1f1;;
 }
 .slider__element{
   box-shadow: inset 0px 0px 200px rgba(0,0,0,0.9);
@@ -94,7 +94,7 @@ h1{
   width: 100%;
 }
 .header{
-  background-color: rgb(153, 96, 96);
+  background-color: #f1f1f1;
   height: 20%;
 }
 
@@ -147,5 +147,3 @@ h1{
     display: none;
   }
 }
-
-

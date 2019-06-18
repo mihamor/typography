@@ -33,7 +33,7 @@ class Navbar extends Component {
   render() {
     // console.log(this.state.location);
     return (
-    <div className="helocader">
+    <div className="header">
       <PhotoSlider/>
       <Sticky innerZ={100}>
       <ul className="navbar">
