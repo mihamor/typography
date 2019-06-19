@@ -4,7 +4,8 @@ import { withRouter} from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import { fetchOfferById } from '../actions/offers';
-import Toast from 'react-bootstrap/Toast'
+import Toast from 'react-bootstrap/Toast';
+import Button from 'react-bootstrap/Button';
 
 function DetailedCard({title, text, footer, imageUrl}) {
   return (
@@ -42,9 +43,21 @@ class Offer extends Component {
       offerData : props.offerData,
       error : props.error,
       currentOfferId : props.match.params.id,
-      loggedInUser : props.loggedInUser
+      loggedInUser : props.loggedInUser,
+      commentText : "",
     };
     this.getOfferData = props.getOfferData;
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({ commentText: event.target.value });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    console.log(this.state.commentText);
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
@@ -79,8 +92,8 @@ class Offer extends Component {
   }
 
   render() {
-    if(this.state.isFetchingOffer || (!this.state.offerData && !this.state.error)) return <h1>Loading...</h1>;
-    else if(this.state.error) return <h1>Error occured: {this.state.error.toString()}</h1>
+    if(this.state.isFetchingOffer || (!this.state.offerData && !this.state.error)) return <h1 className="offers">Loading...</h1>;
+    else if(this.state.error) return <h1 className="offers">Error occured: {this.state.error.toString()}</h1>
     else return (
       <React.Fragment>
         <DetailedCard
@@ -89,10 +102,17 @@ class Offer extends Component {
         imageUrl={this.state.offerData.image_url}
         />
         <div className="comment__section">
-          <Form.Group hidden={!this.state.loggedInUser} controlId="exampleForm.ControlTextarea1">
-            <Form.Label className="comment-form__caption">Comments</Form.Label>
-            <Form.Control placeholder="Leave a comment..." as="textarea" rows="3" />
-          </Form.Group>
+          <Form hidden={!this.state.loggedInUser} onSubmit={this.handleSubmit} >
+            <Form.Group controlId="exampleForm.ControlTextarea1">
+              <Form.Label className="comment-form__caption">Comments</Form.Label>
+              <Form.Control onChange={this.handleChange} className="comment__textarea" placeholder="Leave a comment..." as="textarea" rows="3" />
+              <div className="clearfix">
+                <Button className="comment__submit" variant="secondary" type="submit">
+                  Submit
+                </Button>
+              </div>
+            </Form.Group>
+          </Form>
           <hr/>
           {this.state.offerData.comments.map(comment => 
             <Comment 

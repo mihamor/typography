@@ -72,8 +72,8 @@ class Offers extends Component {
   }
 
   render() {
-    if(this.state.isFetchingOffers || (!this.state.error && !this.state.offersData)) return <h1>Loading...</h1>;
-    else if(this.state.error) return <h1>Error occured: {this.state.error.toString()}</h1>
+    if(this.state.isFetchingOffers || (!this.state.error && !this.state.offersData)) return <h1 className="offers">Loading...</h1>;
+    else if(this.state.error) return <h1 className="offers">Error occured: {this.state.error.toString()}</h1>
     else return <CustomCardDeck cards={this.state.offersData}/>;
   }
 } 

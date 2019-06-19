@@ -221,6 +221,10 @@ h1{
   margin: 0 auto;
   padding-bottom: 100px;
 }
+.comment__textarea{
+  font-size: 1.5rem;
+}
+
 .comment{
   font-size: 1.4rem;
   width: 100%;
@@ -228,4 +232,14 @@ h1{
 }
 .comment__content{
   text-align: left;
+}
+.comment__submit{
+  margin-top: 7px;
+  float: right;
+  font-size: 1.6rem;
+}
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
 }
