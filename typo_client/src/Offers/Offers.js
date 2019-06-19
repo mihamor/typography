@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { fetchOffers } from '../actions/offers';
 import CardDeck from 'react-bootstrap/CardDeck';
 import Card from 'react-bootstrap/Card';
+import { Link } from 'react-router-dom';
 
-function CustomCard({title, text, footer, imageUrl}){
+function CustomCard({title, text, footer, imageUrl, id}){
 
 return (
   <Card className="card">
@@ -16,7 +17,7 @@ return (
       </Card.Text>
     </Card.Body>
     <Card.Footer>
-      <small className="text-muted card__footer">{footer}</small>
+      <Link to={`/offers/${id}`}><small className="text-muted card__footer">{footer}</small></Link>
     </Card.Footer>
   </Card>);
 
@@ -31,14 +32,12 @@ function CustomCardDeck({cards}){
             return <CustomCard title={doc.data.name} text={doc.data.description}
             footer={`Price per unit: ${doc.data.price} UAH`}
             imageUrl={doc.data.image_url}
+            id={doc.id}
             key={doc.id}/>
         })}
       </CardDeck>
     </div>);
 }
-
-
-
 
 class Offers extends Component {
   constructor(props) {
@@ -73,7 +72,7 @@ class Offers extends Component {
   }
 
   render() {
-    if(this.state.isFetchingOffers) return <h1>Loading...</h1>;
+    if(this.state.isFetchingOffers || (!this.state.error && !this.state.offersData)) return <h1>Loading...</h1>;
     else if(this.state.error) return <h1>Error occured: {this.state.error.toString()}</h1>
     else return <CustomCardDeck cards={this.state.offersData}/>;
   }

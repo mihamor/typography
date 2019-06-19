@@ -45,5 +45,13 @@ class DB {
       return offersArray;
     });
   }
+  static getOfferById(id){
+    const offerRef = db.collection("offers").doc(id);
+    return offerRef.get()
+      .then( offer => {
+        if (offer.exists) return offer.data();
+        else return Promise.reject(new Error("No such offer"))
+      });
+  }
 }
 export default DB;
