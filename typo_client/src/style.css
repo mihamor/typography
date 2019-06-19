@@ -14,6 +14,9 @@ html{
 
   text-align: center;
 }
+.auth-link{
+  height: 30%;
+}
 
 .home{
   height: 100%;
@@ -131,6 +134,7 @@ h1{
 .custom-navbar{
   height: 30%;
   z-index: 100;
+  background-color: #f1f1f1;
   font-size: 1.7rem;
 }
 .custom-navbar__link{
@@ -160,9 +164,16 @@ h1{
   .slider{
     display: none;
   }
+  .content{
+    z-index: 1;
+    position: static;
+  }
+  .header{
+    height: auto;
+  }
   .custom-navbar{
     height: 100%;
-    z-index: 100;
+    background-color: #f1f1f1;
   }
 }
 

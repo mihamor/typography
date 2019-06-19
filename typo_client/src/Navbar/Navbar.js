@@ -7,12 +7,31 @@ import 'react-sticky-header/styles.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import firebase from "firebase";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth"
 
 
 class CustomNavbar extends Component {
-
   constructor(props) {
     super(props);
+    this.state = {
+      isSignedIn : !!props.user 
+    }
+    this.uiConfig = {
+      signInFlow: "popup",
+      signInOptions: [
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      ],
+      callbacks: {
+        signInSuccess: () => false
+      }
+    }
+  }
+  componentDidMount = () => {
+    firebase.auth().onAuthStateChanged(user => {
+      this.setState({ isSignedIn: !!user })
+      console.log("user", user)
+    })
   }
 
   render() {
@@ -34,6 +53,30 @@ class CustomNavbar extends Component {
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
               </NavDropdown> */}
+            </Nav>
+            <Nav>
+              {this.state.isSignedIn ? (
+              <React.Fragment>
+                <Navbar.Text>
+                  Signed in as:
+                </Navbar.Text>  
+                <NavDropdown title={firebase.auth().currentUser.displayName} id="basic-nav-dropdown">
+                  <NavDropdown.Item onClick={() => firebase.auth().signOut()}>Sign out</NavDropdown.Item>
+                  {/* <img alt="profile pic" src={firebase.auth().currentUser.photoURL}/> */}
+                </NavDropdown>
+              </React.Fragment>
+                
+              ) : (
+                <StyledFirebaseAuth
+                  uiConfig={this.uiConfig}
+                  firebaseAuth={firebase.auth()}
+                  className="nav-link auth-link"
+                />
+              )}
+              {/* <Nav.Link href="#deets">More deets</Nav.Link>
+              <Nav.Link eventKey={2} href="#memes">
+                Dank memes
+              </Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
         </Navbar>

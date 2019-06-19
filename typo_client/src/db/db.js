@@ -2,16 +2,23 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 let db = null;
+let auth = null;
 
 class DB {
   static initializeApp(config) {
     firebase.initializeApp(config);
     db = firebase.firestore();
+    auth = firebase.auth();
   }
 
   static getInstance(){
     return db;
   }
+
+  static getAuthInstance(){
+    return auth;
+  }
+
 
   static getOffers(){
     return db.collection("offers").get()
