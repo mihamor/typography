@@ -7,31 +7,33 @@ import 'react-sticky-header/styles.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import firebase from "firebase";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth"
-
+import DB from '../db/db';
+import { connect } from 'react-redux';
 
 class CustomNavbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isSignedIn : !!props.user 
+      isSignedIn : !!props.user,
+      loggedInUser : props.user
     }
     this.uiConfig = {
       signInFlow: "popup",
-      signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      ],
+      signInOptions: DB.getAuthProviders(),
       callbacks: {
-        signInSuccess: () => false
+        signInSuccessWithAuthResult: () => false
       }
     }
   }
-  componentDidMount = () => {
-    firebase.auth().onAuthStateChanged(user => {
-      this.setState({ isSignedIn: !!user })
-      console.log("user", user)
-    })
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    if(nextProps.loggedInUser !== prevState.loggedInUser){
+      return { 
+        loggedInUser : nextProps.loggedInUser,
+        isSignedIn : !!nextProps.loggedInUser
+      };
+    }  else return null;
   }
 
   render() {
@@ -46,13 +48,6 @@ class CustomNavbar extends Component {
              <Link to='/' className="nav-link">Home</Link>
              <Link to='/offers' className="nav-link">Offers</Link>
              <Link to='/contact' className="nav-link">Contacts</Link>
-              {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-              </NavDropdown> */}
             </Nav>
             <Nav>
               {this.state.isSignedIn ? (
@@ -60,23 +55,17 @@ class CustomNavbar extends Component {
                 <Navbar.Text>
                   Signed in as:
                 </Navbar.Text>  
-                <NavDropdown title={firebase.auth().currentUser.displayName} id="basic-nav-dropdown">
-                  <NavDropdown.Item onClick={() => firebase.auth().signOut()}>Sign out</NavDropdown.Item>
+                <NavDropdown title={this.state.loggedInUser.name} id="basic-nav-dropdown">
+                  <NavDropdown.Item onClick={() => DB.signOut()}>Sign out</NavDropdown.Item>
                   {/* <img alt="profile pic" src={firebase.auth().currentUser.photoURL}/> */}
                 </NavDropdown>
-              </React.Fragment>
-                
-              ) : (
-                <StyledFirebaseAuth
+              </React.Fragment>) : (
+              <StyledFirebaseAuth
                   uiConfig={this.uiConfig}
-                  firebaseAuth={firebase.auth()}
+                  firebaseAuth={DB.getAuthInstance()}
                   className="nav-link auth-link"
                 />
               )}
-              {/* <Nav.Link href="#deets">More deets</Nav.Link>
-              <Nav.Link eventKey={2} href="#memes">
-                Dank memes
-              </Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -115,5 +104,12 @@ const PhotoSlider = () => {
   );
 };
 
+const mapStateToProps = (state) => {
+  return {
+    loggedInUser : state.auth.loggedInUser
+  };
+};
 
-export default CustomNavbar;
+export default connect(
+  mapStateToProps
+)(CustomNavbar);

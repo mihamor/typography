@@ -10,9 +10,12 @@ import './index.css';
 import rootReducer from './reducers/reducers';
 import DB from './db/db';
 import config from './config';
+import { receiveUser } from './actions/auth';
 
 
 DB.initializeApp(config.db_config);
+
+
 
 const loggerMiddleware = createLogger();
 const store = createStore(
@@ -22,6 +25,11 @@ const store = createStore(
     loggerMiddleware // neat middleware that logs actions
   )
 );
+
+DB.getAuthInstance().onAuthStateChanged(user => {
+  store.dispatch(receiveUser(user));
+  console.log("user", user);
+})
 
 ReactDOM.render((
   <Provider store={store}>

@@ -1,14 +1,13 @@
 import firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/firestore';
 
 let db = null;
-let auth = null;
 
 class DB {
   static initializeApp(config) {
     firebase.initializeApp(config);
     db = firebase.firestore();
-    auth = firebase.auth();
   }
 
   static getInstance(){
@@ -16,9 +15,23 @@ class DB {
   }
 
   static getAuthInstance(){
-    return auth;
+    return firebase.auth();
   }
 
+  static getAuthProviders(){
+    return [firebase.auth.GoogleAuthProvider.PROVIDER_ID,];
+  }
+
+  static getLoggedInUser(){
+    return {
+      name : this.getAuthInstance().currentUser.displayName,
+      image_url: this.getAuthInstance().currentUser.photoURL
+    }
+  }
+
+  static signOut(){
+    this.getAuthInstance().signOut();
+  }
 
   static getOffers(){
     return db.collection("offers").get()
