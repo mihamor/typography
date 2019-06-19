@@ -37,6 +37,20 @@ export function receiveOfferById(offerData, err) {
 }
 
 
+export const REQUEST_INSERT_COMMENT = 'REQUEST_INSERT_COMMENT';
+export function requestInsertComment() {
+  return {
+    type : REQUEST_INSERT_COMMENT,
+  }
+}
+
+export const RECEIVE_INSERT_COMMENT = 'RECEIVE_INSERT_COMMENT';
+export function receiveInsertComment(err) {
+  return {
+    type : RECEIVE_INSERT_COMMENT,
+    error : err
+  }
+}
 
 export function fetchOffers() {
   return dispatch => {
@@ -53,5 +67,14 @@ export function fetchOfferById(id) {
     return DB.getOfferById(id)
       .then (data => dispatch(receiveOfferById(data)))
       .catch(err => dispatch(receiveOfferById(null, err)));
+  };
+}
+
+export function fetchInsertComment(username, content, offerId) {
+  return dispatch => {
+    dispatch(requestInsertComment());
+    return DB.insertComment(offerId, content, username)
+      .then (data => dispatch(receiveInsertComment(null)))
+      .catch(err => dispatch(receiveInsertComment(err)));
   };
 }

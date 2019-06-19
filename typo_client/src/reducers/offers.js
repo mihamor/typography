@@ -2,7 +2,9 @@ import {
   REQUEST_OFFERS,
   RECEIVE_OFFERS,
   REQUEST_OFFER_BY_ID,
-  RECEIVE_OFFER_BY_ID
+  RECEIVE_OFFER_BY_ID,
+  RECEIVE_INSERT_COMMENT,
+  REQUEST_INSERT_COMMENT
 } from '../actions/offers';
 
 const initialState = {
@@ -10,8 +12,10 @@ const initialState = {
     offerData : null,
     error : null,
     errorInOffer : null,
+    errorInComment : null,
     isFetchingOffers : false,
-    isFetchingOffer : false
+    isFetchingOffer : false,
+    isFetchingInsert : false
 };
 
 function offers(state = initialState, action) {
@@ -43,6 +47,24 @@ function offers(state = initialState, action) {
   }
 }
 
+
+function comments(state = initialState, action) {
+  switch (action.type) {
+    case REQUEST_INSERT_COMMENT:
+      return Object.assign({}, state, {
+        errorInComment : null,
+        isFetchingInsert : true
+      })
+    case RECEIVE_INSERT_COMMENT:
+      return Object.assign({}, state, {
+        errorInComment : action.error,
+        isFetchingInsert : false
+      })
+    default:
+      return state;
+  }
+}
+
 function combinedReducer(state = initialState, action){
   switch (action.type) {
     case REQUEST_OFFERS:
@@ -50,6 +72,9 @@ function combinedReducer(state = initialState, action){
     case REQUEST_OFFER_BY_ID:
     case RECEIVE_OFFER_BY_ID:
       return offers(state, action);
+    case REQUEST_INSERT_COMMENT:
+    case RECEIVE_INSERT_COMMENT:
+      return comments(state, action);
     default:
       return state;
     }

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter} from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import { fetchOfferById } from '../actions/offers';
+import { fetchOfferById, fetchInsertComment } from '../actions/offers';
 import Toast from 'react-bootstrap/Toast';
 import Button from 'react-bootstrap/Button';
 
@@ -47,6 +47,7 @@ class Offer extends Component {
       commentText : "",
     };
     this.getOfferData = props.getOfferData;
+    this.insertComment = props.insertComment;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -57,7 +58,11 @@ class Offer extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log(this.state.commentText);
+    this.insertComment(
+      this.state.loggedInUser.name,
+      this.state.commentText,
+      this.state.currentOfferId
+    );
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
@@ -67,20 +72,27 @@ class Offer extends Component {
         offerData : nextProps.offerData,
         isFetchingOffer : nextProps.isFetchingOffer,
         error : nextProps.error,
-        loggedInUser :  nextProps.loggedInUser
+        loggedInUser :  nextProps.loggedInUser,
+        isFetchingInsert : nextProps.isFetchingInsert
       };
     } else if(nextProps.isFetchingOffer !== prevState.isFetchingOffer ){
       console.log("Updating isFetching offer");
       return { 
         isFetchingOffer: nextProps.isFetchingOffer,
         error : nextProps.error,
-        loggedInUser :  nextProps.loggedInUser
+        loggedInUser :  nextProps.loggedInUser,
+        isFetchingInsert : nextProps.isFetchingInsert
       };
     }else if(nextProps.loggedInUser !== prevState.loggedInUser){
       return { 
-        loggedInUser :  nextProps.loggedInUser
+        loggedInUser :  nextProps.loggedInUser,
+        isFetchingInsert : nextProps.isFetchingInsert
       };
-    } else return null;
+    }else if(nextProps.isFetchingInsert !== prevState.isFetchingInsert){
+      return { 
+        isFetchingInsert : nextProps.isFetchingInsert
+      };
+    }else return null;
   }
 
   componentDidMount(){
@@ -102,7 +114,7 @@ class Offer extends Component {
         imageUrl={this.state.offerData.image_url}
         />
         <div className="comment__section">
-          <Form hidden={!this.state.loggedInUser} onSubmit={this.handleSubmit} >
+          <Form hidden={!this.state.loggedInUser || this.state.isFetchingInsert} onSubmit={this.handleSubmit} >
             <Form.Group controlId="exampleForm.ControlTextarea1">
               <Form.Label className="comment-form__caption">Comments</Form.Label>
               <Form.Control onChange={this.handleChange} className="comment__textarea" placeholder="Leave a comment..." as="textarea" rows="3" />
@@ -122,7 +134,6 @@ class Offer extends Component {
             key={comment.id}
             />)}
         </div>
-        
       </React.Fragment>);
   }
 } 
@@ -130,7 +141,10 @@ class Offer extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     getOfferData: (id) => {
-        dispatch(fetchOfferById(id));
+      dispatch(fetchOfferById(id));
+    },
+    insertComment: (username, content, offerId) => {
+      dispatch(fetchInsertComment(username, content, offerId));
     }
   }
 };
@@ -140,7 +154,8 @@ const mapStateToProps = (state) => {
     isFetchingOffer : state.offers.isFetchingOffer,
     offerData : state.offers.offerData,
     error : state.offers.errorInOffer,
-    loggedInUser : state.auth.loggedInUser
+    loggedInUser : state.auth.loggedInUser,
+    isFetchingInsert : state.offers.isFetchingInsert
   }
 };
 

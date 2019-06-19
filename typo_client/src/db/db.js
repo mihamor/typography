@@ -45,6 +45,24 @@ class DB {
       return offersArray;
     });
   }
+
+  static async insertComment(offerId, content, username){
+    const commentRef = await db.collection("comments").add({
+      username,
+      content,
+      addedAt : new Date()
+    });
+
+    //regions: firebase.firestore.FieldValue.arrayUnion("greater_virginia")
+    const offerRef = await db.collection("offers").doc(offerId);
+    await offerRef.update({
+      comments: firebase.firestore.FieldValue.arrayUnion(commentRef)
+    });
+
+    return commentRef.id;
+  }
+
+
   static async getOfferById(id){
     const offerRef = db.collection("offers").doc(id);
     const offer = await offerRef.get();
