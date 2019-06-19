@@ -167,26 +167,6 @@ h1{
   float: right;
   height: 100%;
 }
-@media screen and (max-width: 700px) {
-  .custom-navbar__logo{
-    display: none;
-  }
-  .slider{
-    display: none;
-  }
-  .content{
-    z-index: 1;
-    position: static;
-  }
-  .header{
-    height: auto;
-  }
-  .custom-navbar{
-    height: 100%;
-    background-color: #f1f1f1;
-  }
-}
-
 
 .map-wrapper{
   margin: 0 auto;
@@ -243,3 +223,31 @@ h1{
   display: table;
   clear: both;
 }
+@media screen and (max-width: 700px) {
+  .custom-navbar__logo{
+    display: none;
+  }
+  .slider{
+    display: none;
+  }
+  .content{
+    z-index: 1;
+    position: static;
+  }
+  .header{
+    height: auto;
+  }
+  .custom-navbar{
+    text-align: center;
+    height: 100%;
+    background-color: #f1f1f1;
+  }
+  .card__container{
+    width: 90%;
+  }
+  .comment__section{
+    width: 90%;
+  }
+}
+
+

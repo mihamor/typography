@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import { fetchOfferById, fetchInsertComment } from '../actions/offers';
 import Toast from 'react-bootstrap/Toast';
 import Button from 'react-bootstrap/Button';
+import DB from '../db/db';
 
 function DetailedCard({title, text, footer, imageUrl}) {
   return (
@@ -50,6 +51,7 @@ class Offer extends Component {
     this.insertComment = props.insertComment;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.unsubscribe = null;
   }
 
   handleChange(event) {
@@ -95,11 +97,29 @@ class Offer extends Component {
     }else return null;
   }
 
+  componentDidUpdate(prevProps) {
+    // Популярный пример (не забудьте сравнить пропсы):
+    if (!prevProps.offerData && this.state.offerData) {
+      if(this.unsubscribe) this.unsubscribe();
+      this.unsubscribe = DB.subcribeToOfferChange((doc) => {
+          console.log(" data: ", doc.data());
+      }, this.state.currentOfferId);
+    }
+  }
+
+  componentWillUnmount(){
+    if(this.unsubscribe) this.unsubscribe();
+  }
+
+
   componentDidMount(){
     if(this.getOfferData){
       const cashedOffer = this.state.offerData;
       //check if offer already in state
       if(!cashedOffer || cashedOffer.id !== this.state.currentOfferId) this.getOfferData(this.state.currentOfferId);
+      else {
+        if(this.unsubscribe) this.unsubscribe();
+      }
     }
   }
 

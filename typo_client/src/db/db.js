@@ -33,6 +33,12 @@ class DB {
     this.getAuthInstance().signOut();
   }
 
+
+
+  static subcribeToOfferChange(callback, id){
+    db.collection("offers").doc(id).onSnapshot(callback);
+  }
+
   static getOffers(){
     return db.collection("offers").get()
     .then(querySnapshot => {
@@ -47,18 +53,15 @@ class DB {
   }
 
   static async insertComment(offerId, content, username){
-    const commentRef = await db.collection("comments").add({
+    //regions: firebase.firestore.FieldValue.arrayUnion("greater_virginia")
+    const commentRef = await db.collection("offers").doc(offerId).collection("comments").add({
       username,
       content,
       addedAt : new Date()
     });
-
-    //regions: firebase.firestore.FieldValue.arrayUnion("greater_virginia")
-    const offerRef = await db.collection("offers").doc(offerId);
-    await offerRef.update({
-      comments: firebase.firestore.FieldValue.arrayUnion(commentRef)
-    });
-
+    // await offerRef.update({
+    //   comments: firebase.firestore.FieldValue.arrayUnion(commentRef)
+    // });
     return commentRef.id;
   }
 
@@ -70,10 +73,11 @@ class DB {
     if (offer.exists){
       result = offer.data();
       result.id = id;
-      const commentPromises = result.comments.map(commentRef => {
-        return commentRef.get();
-      });
-      let comments = await Promise.all(commentPromises);
+      // const commentPromises = result.comments.map(commentRef => {
+      //   return commentRef.get();
+      // });
+      // let comments = await Promise.all(commentPromises);
+      let comment 
       comments = comments.map(comment => ({ id : comment.id, data: comment.data()}));
 
       result.comments = comments;
