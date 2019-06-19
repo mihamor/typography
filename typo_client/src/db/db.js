@@ -45,13 +45,23 @@ class DB {
       return offersArray;
     });
   }
-  static getOfferById(id){
+  static async getOfferById(id){
     const offerRef = db.collection("offers").doc(id);
-    return offerRef.get()
-      .then( offer => {
-        if (offer.exists) return offer.data();
-        else return Promise.reject(new Error("No such offer"))
+    const offer = await offerRef.get();
+    let result = null;
+    if (offer.exists){
+      result = offer.data();
+      result.id = id;
+      const commentPromises = result.comments.map(commentRef => {
+        return commentRef.get();
       });
+      let comments = await Promise.all(commentPromises);
+      comments = comments.map(comment => ({ id : comment.id, data: comment.data()}));
+
+      result.comments = comments;
+      console.log("populated", result);
+    } else throw new Error("No such offer");
+    return result;
   }
 }
 export default DB;

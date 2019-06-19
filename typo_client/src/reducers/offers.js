@@ -9,6 +9,7 @@ const initialState = {
     offersData : null,
     offerData : null,
     error : null,
+    errorInOffer : null,
     isFetchingOffers : false,
     isFetchingOffer : false
 };
@@ -28,13 +29,13 @@ function offers(state = initialState, action) {
       })
     case REQUEST_OFFER_BY_ID:
       return Object.assign({}, state, {
-        error : null,
+        errorInOffer : null,
         isFetchingOffer : true
       })
     case RECEIVE_OFFER_BY_ID:
       return Object.assign({}, state, {
         offerData : action.offerData,
-        error : action.error,
+        errorInOffer : action.error,
         isFetchingOffer : false
       })
     default:

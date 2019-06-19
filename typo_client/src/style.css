@@ -11,24 +11,25 @@ html{
 }
 .app {
   height: 100%;
-
-  text-align: center;
 }
 .auth-link{
   height: 30%;
 }
 
 .home{
+  text-align: center;
   height: 100%;
   background-color: lightgray;
   overflow-y: auto;
 }
 .contact{
+  text-align: center;
   height: 100%;
   background-color: whitesmoke;
   overflow-y: auto;
 }
 .offers{
+  text-align: center;
   height: 100%;
   background-color: whitesmoke;
   overflow-y: auto;
@@ -52,6 +53,15 @@ html{
 .card__img{
   max-height: 400px;
   width: auto;
+}
+.card__full-img{
+  height: auto;
+}
+.card__container{
+  position: relative;
+  top: 7%;
+  width: 40%;
+  margin: 0 auto;
 }
 
 .info{
@@ -196,7 +206,26 @@ h1{
   color: gray;
 }
 
-
 .contact__container{
   width: 80%;
+}
+
+.comment-form__caption{
+  font-size: 2rem;
+  float: left;
+}
+.comment__section{
+  position: relative;
+  top: 10%;
+  width: 40%;
+  margin: 0 auto;
+  padding-bottom: 100px;
+}
+.comment{
+  font-size: 1.4rem;
+  width: 100%;
+  max-width: 100%;
+}
+.comment__content{
+  text-align: left;
 }
