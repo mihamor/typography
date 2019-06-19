@@ -46,6 +46,10 @@ html{
 .card__footer{
   font-size: 1.rem;
 }
+.card__img{
+  max-height: 400px;
+  width: auto;
+}
 
 .info{
   font-family: Arial, Helvetica, sans-serif;

@@ -8,11 +8,11 @@ import { createStore, applyMiddleware } from 'redux';
 import App from './App/App';
 import './index.css';
 import rootReducer from './reducers/reducers';
-import db from './db/db';
+import DB from './db/db';
 import config from './config';
 
 
-db.initializeApp(config.db_config);
+DB.initializeApp(config.db_config);
 
 const loggerMiddleware = createLogger();
 const store = createStore(

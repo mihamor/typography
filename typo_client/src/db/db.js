@@ -1,18 +1,29 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
+let db = null;
+
 class DB {
-  constructor(config) {
-   this.config = config
-   this.firebase = firebase;
-  }
-  initializeApp() {
-    this.firebase.initializeApp(this.config)
+  static initializeApp(config) {
+    firebase.initializeApp(config);
+    db = firebase.firestore();
   }
 
-  getInstance(){
-    return this.firebase;
+  static getInstance(){
+    return db;
   }
 
+  static getOffers(){
+    return db.collection("offers").get()
+    .then(querySnapshot => {
+      const offersArray = [];
+      querySnapshot.forEach(function(doc) {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        offersArray.push({ id : doc.id, data : doc.data() });
+      });
+      return offersArray;
+    });
+  }
 }
 export default DB;
