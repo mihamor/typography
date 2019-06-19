@@ -36,7 +36,16 @@ class DB {
 
 
   static subcribeToOfferChange(callback, id){
-    db.collection("offers").doc(id).onSnapshot(callback);
+    db.collection("offers").doc(id).collection("comments").onSnapshot((docs) => {
+      let comments = [];
+      docs.forEach(doc => {
+        comments.push({id: doc.id, data: doc.data()});
+      })
+      comments = comments.sort((a,b) => {
+        return b.data.addedAt.toDate() - a.data.addedAt.toDate();
+      });
+      callback(comments);
+    });
   }
 
   static getOffers(){
@@ -44,7 +53,6 @@ class DB {
     .then(querySnapshot => {
       const offersArray = [];
       querySnapshot.forEach(function(doc) {
-        // doc.data() is never undefined for query doc snapshots
         console.log(doc.id, " => ", doc.data());
         offersArray.push({ id : doc.id, data : doc.data() });
       });
@@ -53,15 +61,11 @@ class DB {
   }
 
   static async insertComment(offerId, content, username){
-    //regions: firebase.firestore.FieldValue.arrayUnion("greater_virginia")
     const commentRef = await db.collection("offers").doc(offerId).collection("comments").add({
       username,
       content,
       addedAt : new Date()
     });
-    // await offerRef.update({
-    //   comments: firebase.firestore.FieldValue.arrayUnion(commentRef)
-    // });
     return commentRef.id;
   }
 
@@ -73,12 +77,15 @@ class DB {
     if (offer.exists){
       result = offer.data();
       result.id = id;
-      // const commentPromises = result.comments.map(commentRef => {
-      //   return commentRef.get();
-      // });
-      // let comments = await Promise.all(commentPromises);
-      let comment 
-      comments = comments.map(comment => ({ id : comment.id, data: comment.data()}));
+      let commentRefs =  await offerRef.collection("comments").get();
+      let comments = []; 
+      commentRefs.forEach(comment => {
+        comments.push({ id : comment.id, data: comment.data()});
+      });
+
+      comments = comments.sort((a,b) => {
+        return b.data.addedAt.toDate() - a.data.addedAt.toDate();
+      });
 
       result.comments = comments;
       console.log("populated", result);

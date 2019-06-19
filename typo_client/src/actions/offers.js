@@ -52,6 +52,14 @@ export function receiveInsertComment(err) {
   }
 }
 
+export const SET_OFFER_DATA = 'SET_OFFER_DATA';
+export function setOfferData(data) {
+  return {
+    type : SET_OFFER_DATA,
+    offerData : data
+  }
+}
+
 export function fetchOffers() {
   return dispatch => {
     dispatch(requestOffers());

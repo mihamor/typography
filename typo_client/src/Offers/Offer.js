@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter} from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import { fetchOfferById, fetchInsertComment } from '../actions/offers';
+import { fetchOfferById, fetchInsertComment, setOfferData } from '../actions/offers';
 import Toast from 'react-bootstrap/Toast';
 import Button from 'react-bootstrap/Button';
 import DB from '../db/db';
@@ -49,9 +49,12 @@ class Offer extends Component {
     };
     this.getOfferData = props.getOfferData;
     this.insertComment = props.insertComment;
+    this.setOfferData = props.setOfferData;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.subcribeToOfferChange = this.subcribeToOfferChange.bind(this);
     this.unsubscribe = null;
+    
   }
 
   handleChange(event) {
@@ -98,13 +101,25 @@ class Offer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Популярный пример (не забудьте сравнить пропсы):
-    if (!prevProps.offerData && this.state.offerData) {
+    // if data changed from null to something
+    // or if id changed --> resubscribe 
+    const isOfferDataAppeardOrChanged = (!prevProps.offerData && this.state.offerData) 
+    || ( prevProps.offerData && prevProps.offerData.id !== this.state.offerData.id);
+
+    if (isOfferDataAppeardOrChanged) {
       if(this.unsubscribe) this.unsubscribe();
-      this.unsubscribe = DB.subcribeToOfferChange((doc) => {
-          console.log(" data: ", doc.data());
-      }, this.state.currentOfferId);
+      this.unsubscribe = this.subcribeToOfferChange();
     }
+  }
+
+  subcribeToOfferChange() {
+    return DB.subcribeToOfferChange((comments) => {
+      console.log(" new comments: ", comments);
+      const newOfferData = { ...this.state.offerData };
+      newOfferData.comments =  comments;
+      this.setOfferData(newOfferData);
+      this.setState({commentText : ""});
+    }, this.state.currentOfferId);
   }
 
   componentWillUnmount(){
@@ -119,6 +134,7 @@ class Offer extends Component {
       if(!cashedOffer || cashedOffer.id !== this.state.currentOfferId) this.getOfferData(this.state.currentOfferId);
       else {
         if(this.unsubscribe) this.unsubscribe();
+        this.unsubscribe = this.subcribeToOfferChange();
       }
     }
   }
@@ -134,12 +150,12 @@ class Offer extends Component {
         imageUrl={this.state.offerData.image_url}
         />
         <div className="comment__section">
-          <Form hidden={!this.state.loggedInUser || this.state.isFetchingInsert} onSubmit={this.handleSubmit} >
+          <Form hidden={!this.state.loggedInUser} onSubmit={this.handleSubmit} >
             <Form.Group controlId="exampleForm.ControlTextarea1">
               <Form.Label className="comment-form__caption">Comments</Form.Label>
-              <Form.Control onChange={this.handleChange} className="comment__textarea" placeholder="Leave a comment..." as="textarea" rows="3" />
+              <Form.Control onChange={this.handleChange} disabled={this.state.isFetchingInsert} value={this.state.commentText} className="comment__textarea" placeholder="Leave a comment..." as="textarea" rows="3" />
               <div className="clearfix">
-                <Button className="comment__submit" variant="secondary" type="submit">
+                <Button disabled={this.state.isFetchingInsert} className="comment__submit" variant="secondary" type="submit">
                   Submit
                 </Button>
               </div>
@@ -162,6 +178,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getOfferData: (id) => {
       dispatch(fetchOfferById(id));
+    },
+    setOfferData : (data) => {
+      dispatch(setOfferData(data));
     },
     insertComment: (username, content, offerId) => {
       dispatch(fetchInsertComment(username, content, offerId));

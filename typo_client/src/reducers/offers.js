@@ -4,7 +4,8 @@ import {
   REQUEST_OFFER_BY_ID,
   RECEIVE_OFFER_BY_ID,
   RECEIVE_INSERT_COMMENT,
-  REQUEST_INSERT_COMMENT
+  REQUEST_INSERT_COMMENT,
+  SET_OFFER_DATA
 } from '../actions/offers';
 
 const initialState = {
@@ -60,6 +61,10 @@ function comments(state = initialState, action) {
         errorInComment : action.error,
         isFetchingInsert : false
       })
+    case SET_OFFER_DATA:
+      return Object.assign({}, state, {
+        offerData : action.offerData,
+      })
     default:
       return state;
   }
@@ -74,6 +79,7 @@ function combinedReducer(state = initialState, action){
       return offers(state, action);
     case REQUEST_INSERT_COMMENT:
     case RECEIVE_INSERT_COMMENT:
+    case SET_OFFER_DATA:
       return comments(state, action);
     default:
       return state;
