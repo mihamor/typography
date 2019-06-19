@@ -23,10 +23,12 @@ html{
 .contact{
   height: 100%;
   background-color: whitesmoke;
+  overflow-y: auto;
 }
 .offers{
   height: 100%;
   background-color: whitesmoke;
+  overflow-y: auto;
 }
 
 .offers__deck{
@@ -124,6 +126,7 @@ h1{
 
 .custom-navbar{
   height: 30%;
+  z-index: 100;
   font-size: 1.7rem;
 }
 .custom-navbar__link{
@@ -146,9 +149,16 @@ h1{
   float: right;
   height: 100%;
 }
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 700px) {
   .custom-navbar__logo{
     display: none;
+  }
+  .slider{
+    display: none;
+  }
+  .custom-navbar{
+    height: 100%;
+    z-index: 100;
   }
 }
 
