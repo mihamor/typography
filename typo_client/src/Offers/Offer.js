@@ -8,6 +8,7 @@ import Toast from 'react-bootstrap/Toast';
 import Button from 'react-bootstrap/Button';
 import Pagination from "react-js-pagination";
 import DB from '../db/db';
+import { FaSort } from "react-icons/fa";
 
 function DetailedCard({title, text, footer, imageUrl}) {
   return (
@@ -37,6 +38,28 @@ function Comment({username, date, content}){
   </Toast>);
 }
 
+function CommentSection({comments, per_page, page, ascendingOrder}){
+  
+  const modifier = ascendingOrder ? -1 : 1;
+  comments = comments.sort((a,b) => {
+    return modifier * b.data.addedAt.toDate() - modifier * a.data.addedAt.toDate();
+  });
+  const resultToRender = comments
+    .slice((page-1) * per_page, page * per_page)
+    .map(comment => 
+    <Comment 
+      username={comment.data.username} 
+      content={comment.data.content}
+      date={comment.data.addedAt.toDate()} 
+      key={comment.id}
+    />);
+  return resultToRender;
+
+
+}
+
+
+
 class Offer extends Component {
   constructor(props) {
     super(props);
@@ -48,6 +71,7 @@ class Offer extends Component {
       loggedInUser : props.loggedInUser,
       commentText : "",
       activePage : 1,
+      ascendingOrder : false
     };
     this.getOfferData = props.getOfferData;
     this.insertComment = props.insertComment;
@@ -56,7 +80,9 @@ class Offer extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.subcribeToOfferChange = this.subcribeToOfferChange.bind(this);
     this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleSortClick = this.handleSortClick.bind(this);
     this.unsubscribe = null;
+  
    
     this.PER_PAGE = 5;
     this.PAGE_RANGE = 5;
@@ -136,7 +162,10 @@ class Offer extends Component {
     if(this.unsubscribe) this.unsubscribe();
   }
 
-
+  handleSortClick(){
+    ///change order of sort
+    this.setState({ascendingOrder : !this.state.ascendingOrder});
+  }
   componentDidMount(){
     if(this.getOfferData){
       const cashedOffer = this.state.offerData;
@@ -150,6 +179,8 @@ class Offer extends Component {
   }
 
   render() {
+
+
     if(this.state.isFetchingOffer || (!this.state.offerData && !this.state.error)) return <h1 className="offers">Loading...</h1>;
     else if(this.state.error) return <h1 className="offers">Error occured: {this.state.error.toString()}</h1>
     else return (
@@ -172,15 +203,18 @@ class Offer extends Component {
             </Form.Group>
           </Form>
           <hr/>
-          {this.state.offerData.comments
-            .slice((this.state.activePage-1) * this.PER_PAGE, this.state.activePage * this.PER_PAGE)
-            .map(comment => 
-              <Comment 
-              username={comment.data.username} 
-              content={comment.data.content}
-              date={comment.data.addedAt.toDate()} 
-              key={comment.id}
-              />)}
+          <div className="clearfix">
+            <div className="comment__sort">
+              <button onClick={this.handleSortClick} className="comment__sort-link"><FaSort/></button>
+              Sorted by date: {this.state.ascendingOrder ? "ascending" : "descending"} order
+            </div>
+          </div>
+          <CommentSection 
+          comments={this.state.offerData.comments} 
+          per_page={this.PER_PAGE}
+          page={this.state.activePage}
+          ascendingOrder={this.state.ascendingOrder}
+          />
           <div className="custom-pagination__container ">
             <Pagination
             activePage={this.state.activePage}

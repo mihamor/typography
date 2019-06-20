@@ -41,9 +41,6 @@ class DB {
       docs.forEach(doc => {
         comments.push({id: doc.id, data: doc.data()});
       })
-      comments = comments.sort((a,b) => {
-        return b.data.addedAt.toDate() - a.data.addedAt.toDate();
-      });
       callback(comments);
     });
   }
@@ -82,11 +79,6 @@ class DB {
       commentRefs.forEach(comment => {
         comments.push({ id : comment.id, data: comment.data()});
       });
-
-      comments = comments.sort((a,b) => {
-        return b.data.addedAt.toDate() - a.data.addedAt.toDate();
-      });
-
       result.comments = comments;
       console.log("populated", result);
     } else throw new Error("No such offer");

@@ -59,6 +59,10 @@ html{
   max-width: 450px;
 }
 
+.comment__sort{
+  font-size: 1.3rem;
+  float: right;
+}
 
 .card__heading{
   font-size: 2rem;
@@ -233,6 +237,12 @@ h1{
   margin-top: 7px;
   float: right;
   font-size: 1.6rem;
+}
+
+.comment__sort-link{
+  padding: 0;
+  border: none;
+  background: none;
 }
 .clearfix:after {
   content: "";

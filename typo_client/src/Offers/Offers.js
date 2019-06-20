@@ -88,8 +88,7 @@ class Offers extends Component {
     <div className="offers">
       <InputGroup className="offers__search">
         <InputGroup.Prepend>
-        <InputGroup.Text bsPrefix="input-group-text search-input" id="basic-addon1"><MdSearch/></InputGroup.Text>
-        
+        <InputGroup.Text bsPrefix="input-group-text search-input" id="basic-addon1"><MdSearch/></InputGroup.Text>      
         </InputGroup.Prepend>
         <Form.Control
           placeholder="Search"
@@ -104,7 +103,6 @@ class Offers extends Component {
     </div> );
   }
 } 
-
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -121,7 +119,6 @@ const mapStateToProps = (state) => {
     error : state.offers.error
   }
 };
-
 
 export default connect(
   mapStateToProps,
