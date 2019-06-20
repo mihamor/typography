@@ -8,6 +8,8 @@ import Form from 'react-bootstrap/Form';
 import { Link } from 'react-router-dom';
 import { MdSearch } from "react-icons/md";
 import { search_throgh, compare_to_offer } from './utils';
+import InputRange from 'react-input-range';
+import 'react-input-range/lib/css/index.css';
 
 function CustomCard({title, text, footer, imageUrl, id}){
 
@@ -52,15 +54,34 @@ class Offers extends Component {
       isFetchingOffers: props.isFetchingOffers,
       offersData : props.offersData,
       error : props.error,
-      searchInput : ""
+      searchInput : "",
+      filterCheck : false,
+      priceRange : 500,
     };
+
+    this.MIN_RANGE = 0;
+    this.MAX_RANGE = 1000;
+
     this.getOffersData = props.getOffersData;
-    this.handleChange = this.handleChange.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.hadleRangeChange = this.hadleRangeChange.bind(this);
+    this.hadleCheckChange = this.hadleCheckChange.bind(this);
   }
 
-  handleChange(event){
+  handleSearchChange(event){
     this.setState({ searchInput: event.target.value });
   }
+
+  hadleRangeChange(value){
+    this.setState({ priceRange: value });
+  }
+  hadleCheckChange(event){
+    this.setState({ filterCheck: event.target.checked });
+  }
+
+
+
+
   static getDerivedStateFromProps(nextProps, prevState){
     if(nextProps.offersData && nextProps.offersData !== prevState.offersData){
       console.log(nextProps.offersData);
@@ -96,10 +117,35 @@ class Offers extends Component {
           aria-describedby="basic-addon1"
           bsPrefix="form-control search-input"
           value={this.state.searchInput}
-          onChange={this.handleChange}
+          onChange={this.handleSearchChange}
         />
       </InputGroup>
-      <CustomCardDeck cards={search_throgh(this.state.offersData, this.state.searchInput, compare_to_offer)}/>
+      <InputGroup className="offers__range">
+        <InputGroup.Prepend>
+          <InputGroup.Text bsPrefix="input-group-text search-input" id="basic-addon2">Filter by price</InputGroup.Text>
+          <InputGroup.Checkbox 
+          checked={this.state.filterCheck} 
+          onChange={this.hadleCheckChange} 
+          aria-label="Checkbox for enable price filter" />
+        </InputGroup.Prepend>
+        <div 
+          className="search__range search-input">
+          <InputRange
+          maxValue={this.MAX_RANGE}
+          minValue={this.MIN_RANGE}
+          disabled={!this.state.filterCheck}
+          value={this.state.priceRange}
+          onChange={this.hadleRangeChange}
+          />
+        </div>
+          
+      </InputGroup>
+      <CustomCardDeck cards={
+        search_throgh(this.state.offersData,
+          this.state.searchInput, 
+          this.state.filterCheck, 
+          this.state.priceRange, 
+          compare_to_offer)}/>
     </div> );
   }
 } 

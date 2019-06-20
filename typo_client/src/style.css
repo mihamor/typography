@@ -39,6 +39,16 @@ html{
 .search-input{
   font-size: 1.5rem;
 }
+.search__range{
+  flex: 1 1 auto;
+  display: block;
+  padding-left: 5px;
+}
+
+.hide {
+  display: none;
+}
+
 
 .offers__deck{
   margin: 0 auto;
@@ -51,6 +61,14 @@ html{
   position: relative;
   width: 79%;
   top: 5%;
+}
+
+.offers__range{
+  
+  margin: 0 auto;
+  position: relative;
+  width: 79%;
+  top: 7%;
 }
 .card{
   font-size: 1.7rem;
