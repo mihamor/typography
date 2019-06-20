@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import { fetchOfferById, fetchInsertComment, setOfferData } from '../actions/offers';
 import Toast from 'react-bootstrap/Toast';
 import Button from 'react-bootstrap/Button';
+import Pagination from "react-js-pagination";
 import DB from '../db/db';
 
 function DetailedCard({title, text, footer, imageUrl}) {
@@ -46,6 +47,7 @@ class Offer extends Component {
       currentOfferId : props.match.params.id,
       loggedInUser : props.loggedInUser,
       commentText : "",
+      activePage : 1,
     };
     this.getOfferData = props.getOfferData;
     this.insertComment = props.insertComment;
@@ -53,8 +55,11 @@ class Offer extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.subcribeToOfferChange = this.subcribeToOfferChange.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
     this.unsubscribe = null;
-    
+   
+    this.PER_PAGE = 5;
+    this.PAGE_RANGE = 5;
   }
 
   handleChange(event) {
@@ -68,6 +73,11 @@ class Offer extends Component {
       this.state.commentText,
       this.state.currentOfferId
     );
+  }
+
+  handlePageChange(pageNumber) {
+    console.log(`active page is ${pageNumber}`);
+    this.setState({activePage: pageNumber});
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
@@ -155,20 +165,36 @@ class Offer extends Component {
               <Form.Label className="comment-form__caption">Comments</Form.Label>
               <Form.Control onChange={this.handleChange} disabled={this.state.isFetchingInsert} value={this.state.commentText} className="comment__textarea" placeholder="Leave a comment..." as="textarea" rows="3" />
               <div className="clearfix">
-                <Button disabled={this.state.isFetchingInsert} className="comment__submit" variant="secondary" type="submit">
+                <Button disabled={this.state.isFetchingInsert} className="comment__submit" variant="primary" type="submit">
                   Submit
                 </Button>
               </div>
             </Form.Group>
           </Form>
           <hr/>
-          {this.state.offerData.comments.map(comment => 
+          {this.state.offerData.comments
+            .slice((this.state.activePage-1) * this.PER_PAGE, this.state.activePage * this.PER_PAGE)
+            .map(comment => 
             <Comment 
             username={comment.data.username} 
             content={comment.data.content}
             date={comment.data.addedAt.toDate()} 
             key={comment.id}
-            />)}
+          />)}
+          <div className="custom-pagination__container ">
+            <Pagination
+            activePage={this.state.activePage}
+            innerClass="pagination justify-content-center"
+            itemClass="page-item"
+            linkClass="page-link"
+            activeClass="page-item active"
+            itemsCountPerPage={this.PER_PAGE}
+            totalItemsCount={this.state.offerData.comments.length}
+            pageRangeDisplayed={this.PAGE_RANGE}
+            onChange={this.handlePageChange}
+            /> 
+          </div>
+           
         </div>
       </React.Fragment>);
   }

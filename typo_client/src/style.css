@@ -223,6 +223,15 @@ h1{
   display: table;
   clear: both;
 }
+
+.custom-pagination__container{
+  font-size: 1.7rem;
+  width: 100%;
+}
+.custom-pagination{
+  margin: 0 auto;
+}
+
 @media screen and (max-width: 700px) {
   .custom-navbar__logo{
     display: none;
@@ -249,5 +258,6 @@ h1{
     width: 90%;
   }
 }
+
 
 
