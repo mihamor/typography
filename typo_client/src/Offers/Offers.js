@@ -136,9 +136,9 @@ class Offers extends Component {
           disabled={!this.state.filterCheck}
           value={this.state.priceRange}
           onChange={this.hadleRangeChange}
+          step={10}
           />
-        </div>
-          
+        </div>        
       </InputGroup>
       <CustomCardDeck cards={
         search_throgh(this.state.offersData,
