@@ -7,11 +7,12 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import { Link } from 'react-router-dom';
 import { MdSearch } from "react-icons/md";
+import { search_throgh, compare_to_offer } from './utils';
 
 function CustomCard({title, text, footer, imageUrl, id}){
 
 return (
-  <Card className="card">
+  <Card className="card card_bounds">
     <Card.Img variant="top" className="card__img" src={imageUrl} />
     <Card.Body>
       <Card.Title className="card__heading">{title}</Card.Title>
@@ -28,16 +29,20 @@ return (
 
 
 function CustomCardDeck({cards}){
-  return (
-  <CardDeck className="offers__deck">
-    { cards.map( doc => {
-        return <CustomCard title={doc.data.name} text={doc.data.description}
-        footer={`Price per unit: ${doc.data.price} UAH`}
-        imageUrl={doc.data.image_url}
-        id={doc.id}
-        key={doc.id}/>
-    })}
-  </CardDeck>);
+
+  let resultToRender = null;
+  if(cards.length === 0) resultToRender = <h1 className="offers__deck">Not found...</h1>;
+  else resultToRender = <CardDeck className="offers__deck">
+  { cards.map( doc => {
+      return <CustomCard title={doc.data.name} text={doc.data.description}
+      footer={`Price per unit: ${doc.data.price} UAH`}
+      imageUrl={doc.data.image_url}
+      id={doc.id}
+      key={doc.id}/>
+  })}
+</CardDeck>;
+
+  return resultToRender;
 }
 
 class Offers extends Component {
@@ -46,11 +51,16 @@ class Offers extends Component {
     this.state = {
       isFetchingOffers: props.isFetchingOffers,
       offersData : props.offersData,
-      error : props.error
+      error : props.error,
+      searchInput : ""
     };
     this.getOffersData = props.getOffersData;
+    this.handleChange = this.handleChange.bind(this);
   }
 
+  handleChange(event){
+    this.setState({ searchInput: event.target.value });
+  }
   static getDerivedStateFromProps(nextProps, prevState){
     if(nextProps.offersData && nextProps.offersData !== prevState.offersData){
       console.log(nextProps.offersData);
@@ -86,9 +96,11 @@ class Offers extends Component {
           aria-label="Search"
           aria-describedby="basic-addon1"
           bsPrefix="form-control search-input"
+          value={this.state.searchInput}
+          onChange={this.handleChange}
         />
       </InputGroup>
-      <CustomCardDeck cards={this.state.offersData}/>
+      <CustomCardDeck cards={search_throgh(this.state.offersData, this.state.searchInput, compare_to_offer)}/>
     </div> );
   }
 } 

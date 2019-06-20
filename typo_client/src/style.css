@@ -55,6 +55,11 @@ html{
 .card{
   font-size: 1.7rem;
 }
+.card_bounds{
+  max-width: 450px;
+}
+
+
 .card__heading{
   font-size: 2rem;
 }
