@@ -6,26 +6,71 @@ import Form from 'react-bootstrap/Form';
 import { fetchOfferById, fetchInsertComment, setOfferData } from '../actions/offers';
 import Toast from 'react-bootstrap/Toast';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import Pagination from "react-js-pagination";
 import DB from '../db/db';
 import { FaSort } from "react-icons/fa";
+import PurchaseForm from './PurchaseForm';
 
-function DetailedCard({title, text, footer, imageUrl}) {
-  return (
-  <div className='card__container'>
-    <Card className="text-center">
-      <Card.Header>{title}</Card.Header>
-      <Card.Img variant="top" className="card__full-img" src={`${process.env.PUBLIC_URL}/${imageUrl}`} />
-      <Card.Body>
-        <Card.Title>{title}</Card.Title>
-        <Card.Text>
-          {text}
-        </Card.Text>
-      </Card.Body>
-      <Card.Footer className="text-muted">{footer}</Card.Footer>
-    </Card>
-  </div>);
+class  DetailedCard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { modalShow: false };
+  }
+
+  render() {
+
+    let modalClose = () => this.setState({ modalShow: false });
+    const {title, text, footer, imageUrl} = this.props;
+    return (
+    <div className='card__container'>
+      <Card className="text-center">
+        <Card.Header>{title}</Card.Header>
+        <Card.Img variant="top" className="card__full-img" src={`${process.env.PUBLIC_URL}/${imageUrl}`} />
+        <Card.Body>
+          <Card.Title>{title}</Card.Title>
+          <Card.Text>
+            {text}
+          </Card.Text>
+          <Button 
+            variant="primary" 
+            onClick={() => this.setState({ modalShow: true })} 
+            className="card__button">Purchase online</Button>
+        </Card.Body>
+        <Card.Footer className="text-muted">{footer}</Card.Footer>
+      </Card>
+      <PurchaseModal
+        show={this.state.modalShow}
+        onHide={modalClose}
+      />
+    </div>);
+  }
 }
+
+
+function PurchaseModal(props){
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter" className="purchase-modal__title">
+          Purchase online
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body className="purchase-modal">
+        <PurchaseForm onHide={props.onHide}/>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button className="purchase-modal__button" onClick={props.onHide}>Close</Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
 
 function Comment({username, date, content}){
   return (
