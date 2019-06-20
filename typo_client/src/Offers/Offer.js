@@ -175,12 +175,12 @@ class Offer extends Component {
           {this.state.offerData.comments
             .slice((this.state.activePage-1) * this.PER_PAGE, this.state.activePage * this.PER_PAGE)
             .map(comment => 
-            <Comment 
-            username={comment.data.username} 
-            content={comment.data.content}
-            date={comment.data.addedAt.toDate()} 
-            key={comment.id}
-          />)}
+              <Comment 
+              username={comment.data.username} 
+              content={comment.data.content}
+              date={comment.data.addedAt.toDate()} 
+              key={comment.id}
+              />)}
           <div className="custom-pagination__container ">
             <Pagination
             activePage={this.state.activePage}
@@ -194,7 +194,6 @@ class Offer extends Component {
             onChange={this.handlePageChange}
             /> 
           </div>
-           
         </div>
       </React.Fragment>);
   }

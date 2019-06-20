@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import { fetchOffers } from '../actions/offers';
 import CardDeck from 'react-bootstrap/CardDeck';
 import Card from 'react-bootstrap/Card';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
 import { Link } from 'react-router-dom';
+import { MdSearch } from "react-icons/md";
 
 function CustomCard({title, text, footer, imageUrl, id}){
 
@@ -26,17 +29,15 @@ return (
 
 function CustomCardDeck({cards}){
   return (
-    <div className="offers">
-      <CardDeck className="offers__deck">
-        { cards.map( doc => {
-            return <CustomCard title={doc.data.name} text={doc.data.description}
-            footer={`Price per unit: ${doc.data.price} UAH`}
-            imageUrl={doc.data.image_url}
-            id={doc.id}
-            key={doc.id}/>
-        })}
-      </CardDeck>
-    </div>);
+  <CardDeck className="offers__deck">
+    { cards.map( doc => {
+        return <CustomCard title={doc.data.name} text={doc.data.description}
+        footer={`Price per unit: ${doc.data.price} UAH`}
+        imageUrl={doc.data.image_url}
+        id={doc.id}
+        key={doc.id}/>
+    })}
+  </CardDeck>);
 }
 
 class Offers extends Component {
@@ -59,7 +60,6 @@ class Offers extends Component {
         error : nextProps.error 
       };
     } else if(nextProps.isFetchingOffers !== prevState.isFetchingOffers ){
-      console.log("Updating isFetching offers");
       return { 
         isFetchingOffers: nextProps.isFetchingOffers,
         error : nextProps.error
@@ -74,7 +74,22 @@ class Offers extends Component {
   render() {
     if(this.state.isFetchingOffers || (!this.state.error && !this.state.offersData)) return <h1 className="offers">Loading...</h1>;
     else if(this.state.error) return <h1 className="offers">Error occured: {this.state.error.toString()}</h1>
-    else return <CustomCardDeck cards={this.state.offersData}/>;
+    else return (
+    <div className="offers">
+      <InputGroup className="offers__search">
+        <InputGroup.Prepend>
+        <InputGroup.Text bsPrefix="input-group-text search-input" id="basic-addon1"><MdSearch/></InputGroup.Text>
+        
+        </InputGroup.Prepend>
+        <Form.Control
+          placeholder="Search"
+          aria-label="Search"
+          aria-describedby="basic-addon1"
+          bsPrefix="form-control search-input"
+        />
+      </InputGroup>
+      <CustomCardDeck cards={this.state.offersData}/>
+    </div> );
   }
 } 
 

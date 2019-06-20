@@ -11,6 +11,7 @@ html{
 }
 .app {
   height: 100%;
+  font-size: 1.5rem;
 }
 .auth-link{
   height: 30%;
@@ -33,12 +34,22 @@ html{
   height: 100%;
   background-color: whitesmoke;
   overflow-y: auto;
+  
+}
+.search-input{
+  font-size: 1.5rem;
 }
 
 .offers__deck{
   margin: 0 auto;
   position: relative;
   width: 80%;
+  top: 10%;
+}
+.offers__search{
+  margin: 0 auto;
+  position: relative;
+  width: 79%;
   top: 5%;
 }
 .card{
@@ -48,7 +59,7 @@ html{
   font-size: 2rem;
 }
 .card__footer{
-  font-size: 1.rem;
+  font-size: 1.2rem;
 }
 .card__img{
   max-height: 400px;
