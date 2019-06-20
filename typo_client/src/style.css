@@ -19,9 +19,8 @@ html{
 
 .home{
   text-align: center;
-  height: 100%;
+  min-height: 100%;
   background-color: lightgray;
-  overflow-y: auto;
 }
 .contact{
   text-align: center;
@@ -34,7 +33,6 @@ html{
   height: 100%;
   background-color: whitesmoke;
   overflow-y: auto;
-  
 }
 .search-input{
   font-size: 1.5rem;
@@ -139,13 +137,11 @@ html{
 .home_gallery{
   margin-top: 20px;
   position: relative;
-  background-color: #174fd1;
   left: 20%;
   width: 60%;
 }
 
 .content{
-  position: absolute;
   z-index: 1;
   height: 100%;
   width: 100%;
@@ -167,7 +163,7 @@ h1{
 .slider__img{
 
   position: relative;
-  z-index: -10;
+  z-index: -1;
   width: 100%;
 }
 .header{
@@ -179,8 +175,41 @@ h1{
   height: 30%;
 }
 
-.custom-navbar{
+.sticky__container {
+  position: relative;
+  height: 100%;
+}
+
+.sticky{
   height: 30%;
+}
+
+.sticky__container_stuck-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  height: 6%;
+}
+.sticky__container_stuck-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  height: 6%;
+}
+.sticky__container_stuck-left {
+  outline: 5px solid cyan;
+}
+.sticky__container_stuck-right {
+  outline: 5px solid salmon;
+}
+
+
+.custom-navbar{
+  height: 100%;
   z-index: 100;
   background-color: #f1f1f1;
   font-size: 1.7rem;
@@ -277,6 +306,18 @@ h1{
 }
 
 @media screen and (max-width: 700px) {
+  .sticky__container{
+    position: fixed;
+    z-index: 5;
+    min-height: 6%;
+    height: auto;
+    width: 100%;
+  }
+
+  .sticky__container_stuck-top {
+    position: fixed;
+    width: 100%;
+  }
   .custom-navbar__logo{
     display: none;
   }
@@ -285,7 +326,8 @@ h1{
   }
   .content{
     z-index: 1;
-    position: static;
+    position: absolute;
+    top: 6%;
   }
   .header{
     height: auto;

@@ -60,7 +60,7 @@ class Home extends Component {
           <h1 className="home__head">Expamles of our work</h1>
         </section>
         <section className="home__section">
-          <div className="home_gallery">
+          <div className="home_gallery clearfix">
             <Gallery images={images}  enableImageSelection={false}/>
           </div>
         </section>

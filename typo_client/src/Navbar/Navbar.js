@@ -10,6 +10,13 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth"
 import DB from '../db/db';
 import { connect } from 'react-redux';
+import Sticky from './Sticky';
+import NavbarContainer from './NavbarContainer';
+
+
+const sides = {
+  top: 0, // Sticks when it scrolls past the top edge
+};
 
 class CustomNavbar extends Component {
   constructor(props) {
@@ -37,38 +44,43 @@ class CustomNavbar extends Component {
   }
 
   render() {
+
     return (
     <div className="header">
       <PhotoSlider/>
-        <Navbar className="custom-navbar" bg="light" expand="lg">
-          <Navbar.Brand className="custom-navbar__brand">KPI Typography</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-             <Link to='/' className="nav-link">Home</Link>
-             <Link to='/offers' className="nav-link">Offers</Link>
-             <Link to='/contact' className="nav-link">Contacts</Link>
-            </Nav>
-            <Nav>
-              {this.state.isSignedIn ? (
-              <React.Fragment>
-                <Navbar.Text>
-                  Signed in as:
-                </Navbar.Text>  
-                <NavDropdown title={this.state.loggedInUser.name} id="basic-nav-dropdown">
-                  <NavDropdown.Item onClick={() => DB.signOut()}>Sign out</NavDropdown.Item>
-                  {/* <img alt="profile pic" src={firebase.auth().currentUser.photoURL}/> */}
-                </NavDropdown>
-              </React.Fragment>) : (
-              <StyledFirebaseAuth
-                  uiConfig={this.uiConfig}
-                  firebaseAuth={DB.getAuthInstance()}
-                  className="nav-link auth-link"
-                />
-              )}
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
+      <Sticky sides={sides}>
+        <NavbarContainer>
+          <Navbar className="custom-navbar" bg="light" expand="lg">
+            <Navbar.Brand className="custom-navbar__brand">KPI Typography</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="mr-auto">
+              <Link to='/' className="nav-link">Home</Link>
+              <Link to='/offers' className="nav-link">Offers</Link>
+              <Link to='/contact' className="nav-link">Contacts</Link>
+              </Nav>
+              <Nav>
+                {this.state.isSignedIn ? (
+                <React.Fragment>
+                  <Navbar.Text>
+                    Signed in as:
+                  </Navbar.Text>  
+                  <NavDropdown title={this.state.loggedInUser.name} id="basic-nav-dropdown">
+                    <NavDropdown.Item onClick={() => DB.signOut()}>Sign out</NavDropdown.Item>
+                    {/* <img alt="profile pic" src={firebase.auth().currentUser.photoURL}/> */}
+                  </NavDropdown>
+                </React.Fragment>) : (
+                <StyledFirebaseAuth
+                    uiConfig={this.uiConfig}
+                    firebaseAuth={DB.getAuthInstance()}
+                    className="nav-link auth-link"
+                  />
+                )}
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar> 
+        </NavbarContainer>
+      </Sticky>
     </div>
     );
 
