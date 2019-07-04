@@ -6,7 +6,6 @@ import '../style.css';
 
 class App extends Component {
   render() {
-    //here insert footer, header
     return (
       <div className="app">
           <Navbar/>

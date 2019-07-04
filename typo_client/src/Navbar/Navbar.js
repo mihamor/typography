@@ -67,7 +67,6 @@ class CustomNavbar extends Component {
                   </Navbar.Text>  
                   <NavDropdown title={this.state.loggedInUser.name} id="basic-nav-dropdown">
                     <NavDropdown.Item onClick={() => DB.signOut()}>Sign out</NavDropdown.Item>
-                    {/* <img alt="profile pic" src={firebase.auth().currentUser.photoURL}/> */}
                   </NavDropdown>
                 </React.Fragment>) : (
                 <StyledFirebaseAuth
