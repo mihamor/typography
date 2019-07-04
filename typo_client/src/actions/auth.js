@@ -1,7 +1,6 @@
 import DB from '../db/db';
 
 export const AUTH_CHANGE = 'AUTH_CHANGE';
-
 export function receiveUser(isLoggedIn) {
   const user = isLoggedIn ? DB.getLoggedInUser() : null;
   return {
@@ -9,12 +8,3 @@ export function receiveUser(isLoggedIn) {
     user : user
   };
 }
-
-
-
-
-// export function authWithFirebase() {
-//   return dispatch => {
-//     dispatch(requestOffers());
-//   };
-// }

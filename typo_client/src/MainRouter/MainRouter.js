@@ -3,13 +3,9 @@ import React, { Component } from 'react';
 import Home from '../Home/Home';
 import Contact from '../Contact/Contact';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { changeLocation } from '../actions/location';
-import '../style.css';
 import images from './images';
 import Offers from '../Offers/Offers';
-import Offer from '../Offers/Offer';
-
+import OfferPage from '../OfferPage/OfferPage';
 
 const OffersRoute = ({user}) => (
   <Switch>
@@ -19,7 +15,7 @@ const OffersRoute = ({user}) => (
       />
       <Route
         path='/offers/:id'
-        render={props => <Offer user={user}/>}
+        render={props => <OfferPage user={user}/>}
       />
 
   </Switch>
@@ -28,8 +24,7 @@ const OffersRoute = ({user}) => (
 class MainRouter extends Component{
   constructor(props){
     super(props);
-    this.state = { location : "home" };
-    this.onRouteChanged = props.changeCurrLocation;
+    this.state = { user : props.user };
   }
   render() {
     return (
@@ -50,17 +45,5 @@ class MainRouter extends Component{
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    changeCurrLocation: (data) => {
-        dispatch(changeLocation(data));
-    }
-  }
-};
-
-const RouterContainer = withRouter(connect(
-  null,
-  mapDispatchToProps
-)(MainRouter));
-
+const RouterContainer = withRouter(MainRouter);
 export default RouterContainer;

@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import config from '../config';
  
-export class MapContainer extends Component {
-
+class MapContainer extends Component {
   constructor(props){
     super(props);
     this.state = {

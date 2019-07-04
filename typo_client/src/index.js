@@ -6,17 +6,12 @@ import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { createStore, applyMiddleware } from 'redux';
 import App from './App/App';
-import './index.css';
 import rootReducer from './reducers/reducers';
 import DB from './db/db';
 import config from './config';
 import { receiveUser } from './actions/auth';
 
-
 DB.initializeApp(config.db_config);
-
-
-
 const loggerMiddleware = createLogger();
 const store = createStore(
   rootReducer,
@@ -29,7 +24,7 @@ const store = createStore(
 DB.getAuthInstance().onAuthStateChanged(user => {
   store.dispatch(receiveUser(user));
   console.log("user", user);
-})
+});
 
 ReactDOM.render((
   <Provider store={store}>
@@ -37,4 +32,4 @@ ReactDOM.render((
       <App/>
     </BrowserRouter>
   </Provider>
-), document.getElementById('root'))
+), document.getElementById('root'));

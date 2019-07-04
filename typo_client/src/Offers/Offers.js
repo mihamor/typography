@@ -1,51 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchOffers } from '../actions/offers';
-import CardDeck from 'react-bootstrap/CardDeck';
-import Card from 'react-bootstrap/Card';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Form from 'react-bootstrap/Form';
-import { Link } from 'react-router-dom';
-import { MdSearch } from "react-icons/md";
+import CustomCardDeck from './CustomCardDeck';
 import { search_throgh, compare_to_offer } from './utils';
-import InputRange from 'react-input-range';
-import 'react-input-range/lib/css/index.css';
-
-function CustomCard({title, text, footer, imageUrl, id}){
-
-return (
-  <Card className="card card_bounds">
-    <Card.Img variant="top" className="card__img" src={imageUrl} />
-    <Card.Body>
-      <Card.Title className="card__heading">{title}</Card.Title>
-      <Card.Text>
-        {text}
-      </Card.Text>
-    </Card.Body>
-    <Card.Footer>
-      <Link to={`/offers/${id}`}><small className="text-muted card__footer">{footer}</small></Link>
-    </Card.Footer>
-  </Card>);
-
-}
-
-
-function CustomCardDeck({cards}){
-
-  let resultToRender = null;
-  if(cards.length === 0) resultToRender = <h1 className="offers__deck">Not found...</h1>;
-  else resultToRender = <CardDeck className="offers__deck">
-  { cards.map( doc => {
-      return <CustomCard title={doc.data.name} text={doc.data.description}
-      footer={`Price per unit: ${doc.data.price} UAH`}
-      imageUrl={doc.data.image_url}
-      id={doc.id}
-      key={doc.id}/>
-  })}
-</CardDeck>;
-
-  return resultToRender;
-}
+import OfferFilter from './OfferFilter';
 
 class Offers extends Component {
   constructor(props) {
@@ -64,23 +22,20 @@ class Offers extends Component {
 
     this.getOffersData = props.getOffersData;
     this.handleSearchChange = this.handleSearchChange.bind(this);
-    this.hadleRangeChange = this.hadleRangeChange.bind(this);
-    this.hadleCheckChange = this.hadleCheckChange.bind(this);
+    this.handleRangeChange = this.handleRangeChange.bind(this);
+    this.handleCheckChange = this.handleCheckChange.bind(this);
   }
 
   handleSearchChange(event){
     this.setState({ searchInput: event.target.value });
   }
 
-  hadleRangeChange(value){
+  handleRangeChange(value){
     this.setState({ priceRange: value });
   }
-  hadleCheckChange(event){
+  handleCheckChange(event){
     this.setState({ filterCheck: event.target.checked });
   }
-
-
-
 
   static getDerivedStateFromProps(nextProps, prevState){
     if(nextProps.offersData && nextProps.offersData !== prevState.offersData){
@@ -107,39 +62,16 @@ class Offers extends Component {
     else if(this.state.error) return <h1 className="offers">Error occured: {this.state.error.toString()}</h1>
     else return (
     <div className="offers">
-      <InputGroup className="offers__search">
-        <InputGroup.Prepend>
-        <InputGroup.Text bsPrefix="input-group-text search-input" id="basic-addon1"><MdSearch/></InputGroup.Text>      
-        </InputGroup.Prepend>
-        <Form.Control
-          placeholder="Search"
-          aria-label="Search"
-          aria-describedby="basic-addon1"
-          bsPrefix="form-control search-input"
-          value={this.state.searchInput}
-          onChange={this.handleSearchChange}
-        />
-      </InputGroup>
-      <InputGroup className="offers__range">
-        <InputGroup.Prepend>
-          <InputGroup.Text bsPrefix="input-group-text search-input" id="basic-addon2">Filter by price</InputGroup.Text>
-          <InputGroup.Checkbox 
-          checked={this.state.filterCheck} 
-          onChange={this.hadleCheckChange} 
-          aria-label="Checkbox for enable price filter" />
-        </InputGroup.Prepend>
-        <div 
-          className="search__range search-input">
-          <InputRange
-          maxValue={this.MAX_RANGE}
-          minValue={this.MIN_RANGE}
-          disabled={!this.state.filterCheck}
-          value={this.state.priceRange}
-          onChange={this.hadleRangeChange}
-          step={10}
-          />
-        </div>        
-      </InputGroup>
+      <OfferFilter
+        searchInput={this.state.searchInput}
+        handleSearchChange={this.handleSearchChange}
+        filterCheck={this.state.filterCheck}
+        handleCheckChange={this.handleCheckChange}
+        handleRangeChange={this.handleRangeChange}
+        MAX_RANGE={this.MAX_RANGE}
+        MIN_RANGE={this.MIN_RANGE}
+        priceRange={this.state.priceRange}
+      />
       <CustomCardDeck cards={
         search_throgh(this.state.offersData,
           this.state.searchInput, 

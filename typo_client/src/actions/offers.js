@@ -1,7 +1,6 @@
 import DB from '../db/db';
 
 export const REQUEST_OFFERS = 'REQUEST_OFFERS';
-
 export function requestOffers() {
   return {
     type : REQUEST_OFFERS,
@@ -19,7 +18,6 @@ export function receiveOffers(offersData, err) {
 }
 
 export const REQUEST_OFFER_BY_ID = 'REQUEST_OFFER_BY_ID';
-
 export function requestOfferById() {
   return {
     type : REQUEST_OFFER_BY_ID,
@@ -35,7 +33,6 @@ export function receiveOfferById(offerData, err) {
     error : err
   }
 }
-
 
 export const REQUEST_INSERT_COMMENT = 'REQUEST_INSERT_COMMENT';
 export function requestInsertComment() {

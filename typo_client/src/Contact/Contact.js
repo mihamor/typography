@@ -23,8 +23,4 @@ class Contact extends Component {
   }
 } 
 
-//AIzaSyB2AWqsBw6NLLz6j36GNkaUt2HYBH3Citw
-
-
-
 export default Contact;

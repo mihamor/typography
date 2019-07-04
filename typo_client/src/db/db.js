@@ -33,8 +33,6 @@ class DB {
     this.getAuthInstance().signOut();
   }
 
-
-
   static subcribeToOfferChange(callback, id){
     db.collection("offers").doc(id).collection("comments").onSnapshot((docs) => {
       let comments = [];
@@ -65,7 +63,6 @@ class DB {
     });
     return commentRef.id;
   }
-
 
   static async getOfferById(id){
     const offerRef = db.collection("offers").doc(id);

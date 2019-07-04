@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css?family=Anton');
 html, body{
   height: 100%;
 }
@@ -205,7 +205,6 @@ h1{
 .sticky__container_stuck-right {
   outline: 5px solid salmon;
 }
-
 
 .custom-navbar{
   height: 100%;

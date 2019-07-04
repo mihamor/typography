@@ -1,111 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter} from 'react-router-dom';
-import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import { fetchOfferById, fetchInsertComment, setOfferData } from '../actions/offers';
-import Toast from 'react-bootstrap/Toast';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import Pagination from "react-js-pagination";
 import DB from '../db/db';
 import { FaSort } from "react-icons/fa";
-import PurchaseForm from './PurchaseForm';
+import DetailedCard from './DetailedCard';
+import CommentSection from './ComnnetSection';
 
-class  DetailedCard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { modalShow: false };
-  }
-
-  render() {
-
-    let modalClose = () => this.setState({ modalShow: false });
-    const {title, text, footer, imageUrl} = this.props;
-    return (
-    <div className='card__container'>
-      <Card className="text-center">
-        <Card.Header>{title}</Card.Header>
-        <Card.Img variant="top" className="card__full-img" src={`${process.env.PUBLIC_URL}/${imageUrl}`} />
-        <Card.Body>
-          <Card.Title>{title}</Card.Title>
-          <Card.Text>
-            {text}
-          </Card.Text>
-          <Button 
-            variant="primary" 
-            onClick={() => this.setState({ modalShow: true })} 
-            className="card__button">Purchase online</Button>
-        </Card.Body>
-        <Card.Footer className="text-muted">{footer}</Card.Footer>
-      </Card>
-      <PurchaseModal
-        show={this.state.modalShow}
-        onHide={modalClose}
-      />
-    </div>);
-  }
-}
-
-
-function PurchaseModal(props){
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter" className="purchase-modal__title">
-          Purchase online
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body className="purchase-modal">
-        <PurchaseForm onHide={props.onHide}/>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button className="purchase-modal__button" onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
-    </Modal>
-  );
-}
-
-
-function Comment({username, date, content}){
-  return (
-  <Toast className="comment">
-    <Toast.Header closeButton={false}>
-      <strong className="mr-auto">{username}</strong>
-      <small>{date.toString()}</small>
-    </Toast.Header>
-    <Toast.Body>{content}</Toast.Body>
-  </Toast>);
-}
-
-function CommentSection({comments, per_page, page, ascendingOrder}){
-  
-  const modifier = ascendingOrder ? -1 : 1;
-  comments = comments.sort((a,b) => {
-    return modifier * b.data.addedAt.toDate() - modifier * a.data.addedAt.toDate();
-  });
-  const resultToRender = comments
-    .slice((page-1) * per_page, page * per_page)
-    .map(comment => 
-    <Comment 
-      username={comment.data.username} 
-      content={comment.data.content}
-      date={comment.data.addedAt.toDate()} 
-      key={comment.id}
-    />);
-  return resultToRender;
-
-
-}
-
-
-
-class Offer extends Component {
+class OfferPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -116,25 +21,30 @@ class Offer extends Component {
       loggedInUser : props.loggedInUser,
       commentText : "",
       activePage : 1,
-      ascendingOrder : false
+      ascendingOrder : false,
+      isValidComment : false
     };
     this.getOfferData = props.getOfferData;
     this.insertComment = props.insertComment;
     this.setOfferData = props.setOfferData;
-    this.handleChange = this.handleChange.bind(this);
+    this.handleCommentChange = this.handleCommentChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.subcribeToOfferChange = this.subcribeToOfferChange.bind(this);
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handleSortClick = this.handleSortClick.bind(this);
     this.unsubscribe = null;
-  
-   
     this.PER_PAGE = 5;
     this.PAGE_RANGE = 5;
   }
 
-  handleChange(event) {
-    this.setState({ commentText: event.target.value });
+  processCommentString(str) {
+    return str.trim().replace(/\s+/g, ' ');
+  }
+
+  handleCommentChange(event) {
+    const commentText = event.target.value;
+    const commentPayload = this.processCommentString(commentText);
+    this.setState({ commentText, isValidComment : commentPayload.length !== 0 });
   }
 
   handleSubmit(event) {
@@ -224,24 +134,35 @@ class Offer extends Component {
   }
 
   render() {
-
-
     if(this.state.isFetchingOffer || (!this.state.offerData && !this.state.error)) return <h1 className="offers">Loading...</h1>;
     else if(this.state.error) return <h1 className="offers">Error occured: {this.state.error.toString()}</h1>
     else return (
       <React.Fragment>
         <DetailedCard
-        title={this.state.offerData.name} text={this.state.offerData.description}
-        footer={`Price per unit: ${this.state.offerData.price} UAH`}
-        imageUrl={this.state.offerData.image_url}
+          title={this.state.offerData.name} text={this.state.offerData.description}
+          footer={`Price per unit: ${this.state.offerData.price} UAH`}
+          imageUrl={this.state.offerData.image_url}
         />
         <div className="comment__section">
           <Form hidden={!this.state.loggedInUser} onSubmit={this.handleSubmit} >
             <Form.Group controlId="exampleForm.ControlTextarea1">
               <Form.Label className="comment-form__caption">Comments</Form.Label>
-              <Form.Control onChange={this.handleChange} disabled={this.state.isFetchingInsert} value={this.state.commentText} className="comment__textarea" placeholder="Leave a comment..." as="textarea" rows="3" />
+              <Form.Control 
+                onChange={this.handleCommentChange} 
+                disabled={this.state.isFetchingInsert} 
+                value={this.state.commentText} 
+                className="comment__textarea" 
+                placeholder="Leave a comment..." 
+                as="textarea" 
+                rows="3" 
+              />
               <div className="clearfix">
-                <Button disabled={this.state.isFetchingInsert} className="comment__submit" variant="primary" type="submit">
+                <Button 
+                  disabled={this.state.isFetchingInsert || !this.state.isValidComment} 
+                  className="comment__submit" 
+                  variant="primary" 
+                  type="submit"
+                >
                   Submit
                 </Button>
               </div>
@@ -250,27 +171,29 @@ class Offer extends Component {
           <hr/>
           <div className="clearfix">
             <div className="comment__sort">
-              <button onClick={this.handleSortClick} className="comment__sort-link"><FaSort/></button>
+              <button onClick={this.handleSortClick} className="comment__sort-link">
+                <FaSort/>
+              </button>
               Sorted by date: {this.state.ascendingOrder ? "ascending" : "descending"} order
             </div>
           </div>
           <CommentSection 
-          comments={this.state.offerData.comments} 
-          per_page={this.PER_PAGE}
-          page={this.state.activePage}
-          ascendingOrder={this.state.ascendingOrder}
+            comments={this.state.offerData.comments} 
+            per_page={this.PER_PAGE}
+            page={this.state.activePage}
+            ascendingOrder={this.state.ascendingOrder}
           />
           <div className="custom-pagination__container ">
             <Pagination
-            activePage={this.state.activePage}
-            innerClass="pagination justify-content-center"
-            itemClass="page-item"
-            linkClass="page-link"
-            activeClass="page-item active"
-            itemsCountPerPage={this.PER_PAGE}
-            totalItemsCount={this.state.offerData.comments.length}
-            pageRangeDisplayed={this.PAGE_RANGE}
-            onChange={this.handlePageChange}
+              activePage={this.state.activePage}
+              innerClass="pagination justify-content-center"
+              itemClass="page-item"
+              linkClass="page-link"
+              activeClass="page-item active"
+              itemsCountPerPage={this.PER_PAGE}
+              totalItemsCount={this.state.offerData.comments.length}
+              pageRangeDisplayed={this.PAGE_RANGE}
+              onChange={this.handlePageChange}
             /> 
           </div>
         </div>
@@ -305,4 +228,4 @@ const mapStateToProps = (state) => {
 export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Offer));
+)(OfferPage));

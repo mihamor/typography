@@ -28,7 +28,6 @@ class Home extends Component {
   render() {
 
     const images = this.setCustomOverlay(this.state.images);
-
     return (
     <div className="home">
       <Parallax
@@ -36,7 +35,7 @@ class Home extends Component {
         bgImage={process.env.PUBLIC_URL + "bg-parallax.jpg"}
         bgImageAlt="Paralax"
         strength={200}
-        >
+      >
         <div className="info">
           <section className="info__section">
             <h1>
