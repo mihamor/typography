@@ -49,11 +49,14 @@ class OfferPage extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.insertComment(
-      this.state.loggedInUser.name,
-      this.state.commentText,
-      this.state.currentOfferId
-    );
+    if(this.state.isValidComment){
+      const commentPayload = this.processCommentString(this.state.commentText);
+      this.insertComment(
+        this.state.loggedInUser.name,
+        commentPayload,
+        this.state.currentOfferId
+      );
+    }
   }
 
   handlePageChange(pageNumber) {
