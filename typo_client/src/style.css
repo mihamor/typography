@@ -338,6 +338,7 @@ h1{
     z-index: 1;
     position: absolute;
     top: 6%;
+    height: 100%;
   }
   .header{
     height: auto;

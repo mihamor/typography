@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter} from 'react-router-dom';
-import Form from 'react-bootstrap/Form';
 import { fetchOfferById, fetchInsertComment, setOfferData } from '../actions/offers';
-import Button from 'react-bootstrap/Button';
 import Pagination from "react-js-pagination";
 import DB from '../db/db';
-import { FaSort } from "react-icons/fa";
 import DetailedCard from './DetailedCard';
 import CommentSection from './ComnnetSection';
+import CommentForm from './CommentForm';
 
 class OfferPage extends Component {
   constructor(props) {
@@ -56,6 +54,7 @@ class OfferPage extends Component {
         commentPayload,
         this.state.currentOfferId
       );
+      this.setState({commentText : '', isValidComment: false});
     }
   }
 
@@ -66,7 +65,6 @@ class OfferPage extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState){
     if(nextProps.offerData && nextProps.offerData !== prevState.offerData){
-      console.log(nextProps.offerData);
       return { 
         offerData : nextProps.offerData,
         isFetchingOffer : nextProps.isFetchingOffer,
@@ -75,7 +73,6 @@ class OfferPage extends Component {
         isFetchingInsert : nextProps.isFetchingInsert
       };
     } else if(nextProps.isFetchingOffer !== prevState.isFetchingOffer ){
-      console.log("Updating isFetching offer");
       return { 
         isFetchingOffer: nextProps.isFetchingOffer,
         error : nextProps.error,
@@ -108,7 +105,6 @@ class OfferPage extends Component {
 
   subcribeToOfferChange() {
     return DB.subcribeToOfferChange((comments) => {
-      console.log(" new comments: ", comments);
       const newOfferData = { ...this.state.offerData };
       newOfferData.comments =  comments;
       this.setOfferData(newOfferData);
@@ -128,7 +124,8 @@ class OfferPage extends Component {
     if(this.getOfferData){
       const cashedOffer = this.state.offerData;
       //check if offer already in state
-      if(!cashedOffer || cashedOffer.id !== this.state.currentOfferId) this.getOfferData(this.state.currentOfferId);
+      if(!cashedOffer || cashedOffer.id !== this.state.currentOfferId)
+        this.getOfferData(this.state.currentOfferId);
       else {
         if(this.unsubscribe) this.unsubscribe();
         this.unsubscribe = this.subcribeToOfferChange();
@@ -147,39 +144,12 @@ class OfferPage extends Component {
           imageUrl={this.state.offerData.image_url}
         />
         <div className="comment__section">
-          <Form hidden={!this.state.loggedInUser} onSubmit={this.handleSubmit} >
-            <Form.Group controlId="exampleForm.ControlTextarea1">
-              <Form.Label className="comment-form__caption">Comments</Form.Label>
-              <Form.Control 
-                onChange={this.handleCommentChange} 
-                disabled={this.state.isFetchingInsert} 
-                value={this.state.commentText} 
-                className="comment__textarea" 
-                placeholder="Leave a comment..." 
-                as="textarea" 
-                rows="3" 
-              />
-              <div className="clearfix">
-                <Button 
-                  disabled={this.state.isFetchingInsert || !this.state.isValidComment} 
-                  className="comment__submit" 
-                  variant="primary" 
-                  type="submit"
-                >
-                  Submit
-                </Button>
-              </div>
-            </Form.Group>
-          </Form>
-          <hr/>
-          <div className="clearfix">
-            <div className="comment__sort">
-              <button onClick={this.handleSortClick} className="comment__sort-link">
-                <FaSort/>
-              </button>
-              Sorted by date: {this.state.ascendingOrder ? "ascending" : "descending"} order
-            </div>
-          </div>
+          <CommentForm
+            handleCommentChange={this.handleCommentChange}
+            handleSortClick={this.handleSortClick}
+            handleSubmit={this.handleSubmit}
+            state={this.state}
+          />
           <CommentSection 
             comments={this.state.offerData.comments} 
             per_page={this.PER_PAGE}
