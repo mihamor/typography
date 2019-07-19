@@ -9,9 +9,6 @@ class Offers extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFetchingOffers: props.isFetchingOffers,
-      offersData : props.offersData,
-      error : props.error,
       searchInput : "",
       filterCheck : false,
       priceRange : 500,
@@ -37,29 +34,13 @@ class Offers extends Component {
     this.setState({ filterCheck: event.target.checked });
   }
 
-  static getDerivedStateFromProps(nextProps, prevState){
-    if(nextProps.offersData && nextProps.offersData !== prevState.offersData){
-      console.log(nextProps.offersData);
-      return { 
-        offersData : nextProps.offersData,
-        isFetchingOffers : nextProps.isFetchingOffers,
-        error : nextProps.error 
-      };
-    } else if(nextProps.isFetchingOffers !== prevState.isFetchingOffers ){
-      return { 
-        isFetchingOffers: nextProps.isFetchingOffers,
-        error : nextProps.error
-      };
-    } else return null;
-  }
-
   componentDidMount(){
-    if(this.getOffersData && !this.state.offersData) this.getOffersData();
+    if(this.getOffersData && !this.props.offersData) this.getOffersData();
   }
 
   render() {
-    if(this.state.isFetchingOffers || (!this.state.error && !this.state.offersData)) return <h1 className="offers">Loading...</h1>;
-    else if(this.state.error) return <h1 className="offers">Error occured: {this.state.error.toString()}</h1>
+    if(this.props.isFetchingOffers || (!this.props.error && !this.props.offersData)) return <h1 className="offers">Loading...</h1>;
+    else if(this.props.error) return <h1 className="offers">Error occured: {this.props.error.toString()}</h1>
     else return (
     <div className="offers">
       <OfferFilter
@@ -73,7 +54,7 @@ class Offers extends Component {
         priceRange={this.state.priceRange}
       />
       <CustomCardDeck cards={
-        search_throgh(this.state.offersData,
+        search_throgh(this.props.offersData,
           this.state.searchInput, 
           this.state.filterCheck, 
           this.state.priceRange, 

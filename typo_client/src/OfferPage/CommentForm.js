@@ -3,16 +3,16 @@ import Form from 'react-bootstrap/Form';
 import { FaSort } from "react-icons/fa";
 import Button from 'react-bootstrap/Button';
 
-function CommentForm({state, handleSubmit, handleCommentChange, handleSortClick}){
+function CommentForm({state, loggedInUser, isFetchingInsert, handleSubmit, handleCommentChange, handleSortClick}){
 
   return (
   <React.Fragment>
-    <Form hidden={!state.loggedInUser} onSubmit={handleSubmit} >
+    <Form hidden={!loggedInUser} onSubmit={handleSubmit} >
       <Form.Group controlId="exampleForm.ControlTextarea1">
         <Form.Label className="comment-form__caption">Comments</Form.Label>
         <Form.Control 
           onChange={handleCommentChange} 
-          disabled={state.isFetchingInsert} 
+          disabled={isFetchingInsert} 
           value={state.commentText} 
           className="comment__textarea" 
           placeholder="Leave a comment..." 
@@ -21,7 +21,7 @@ function CommentForm({state, handleSubmit, handleCommentChange, handleSortClick}
         />
         <div className="clearfix">
           <Button 
-            disabled={state.isFetchingInsert || !state.isValidComment} 
+            disabled={isFetchingInsert || !state.isValidComment} 
             className="comment__submit" 
             variant="primary" 
             type="submit"

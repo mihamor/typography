@@ -12,11 +12,7 @@ class OfferPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFetchingOffer : props.isFetchingOffer,
-      offerData : props.offerData,
-      error : props.error,
       currentOfferId : props.match.params.id,
-      loggedInUser : props.loggedInUser,
       commentText : "",
       activePage : 1,
       ascendingOrder : false,
@@ -50,7 +46,7 @@ class OfferPage extends Component {
     if(this.state.isValidComment){
       const commentPayload = this.processCommentString(this.state.commentText);
       this.insertComment(
-        this.state.loggedInUser.name,
+        this.props.loggedInUser.name,
         commentPayload,
         this.state.currentOfferId
       );
@@ -63,39 +59,11 @@ class OfferPage extends Component {
     this.setState({activePage: pageNumber});
   }
 
-  static getDerivedStateFromProps(nextProps, prevState){
-    if(nextProps.offerData && nextProps.offerData !== prevState.offerData){
-      return { 
-        offerData : nextProps.offerData,
-        isFetchingOffer : nextProps.isFetchingOffer,
-        error : nextProps.error,
-        loggedInUser :  nextProps.loggedInUser,
-        isFetchingInsert : nextProps.isFetchingInsert
-      };
-    } else if(nextProps.isFetchingOffer !== prevState.isFetchingOffer ){
-      return { 
-        isFetchingOffer: nextProps.isFetchingOffer,
-        error : nextProps.error,
-        loggedInUser :  nextProps.loggedInUser,
-        isFetchingInsert : nextProps.isFetchingInsert
-      };
-    }else if(nextProps.loggedInUser !== prevState.loggedInUser){
-      return { 
-        loggedInUser :  nextProps.loggedInUser,
-        isFetchingInsert : nextProps.isFetchingInsert
-      };
-    }else if(nextProps.isFetchingInsert !== prevState.isFetchingInsert){
-      return { 
-        isFetchingInsert : nextProps.isFetchingInsert
-      };
-    }else return null;
-  }
-
   componentDidUpdate(prevProps) {
     // if data changed from null to something
     // or if id changed --> resubscribe 
-    const isOfferDataAppeardOrChanged = (!prevProps.offerData && this.state.offerData) 
-    || ( prevProps.offerData && prevProps.offerData.id !== this.state.offerData.id);
+    const isOfferDataAppeardOrChanged = (!prevProps.offerData && this.props.offerData) 
+    || ( prevProps.offerData && prevProps.offerData.id !== this.props.offerData.id);
 
     if (isOfferDataAppeardOrChanged) {
       if(this.unsubscribe) this.unsubscribe();
@@ -105,7 +73,7 @@ class OfferPage extends Component {
 
   subcribeToOfferChange() {
     return DB.subcribeToOfferChange((comments) => {
-      const newOfferData = { ...this.state.offerData };
+      const newOfferData = { ...this.props.offerData };
       newOfferData.comments =  comments;
       this.setOfferData(newOfferData);
       this.setState({commentText : ""});
@@ -122,7 +90,7 @@ class OfferPage extends Component {
   }
   componentDidMount(){
     if(this.getOfferData){
-      const cashedOffer = this.state.offerData;
+      const cashedOffer = this.props.offerData;
       //check if offer already in state
       if(!cashedOffer || cashedOffer.id !== this.state.currentOfferId)
         this.getOfferData(this.state.currentOfferId);
@@ -134,14 +102,14 @@ class OfferPage extends Component {
   }
 
   render() {
-    if(this.state.isFetchingOffer || (!this.state.offerData && !this.state.error)) return <h1 className="offers">Loading...</h1>;
-    else if(this.state.error) return <h1 className="offers">Error occured: {this.state.error.toString()}</h1>
+    if(this.props.isFetchingOffer || (!this.props.offerData && !this.props.error)) return <h1 className="offers">Loading...</h1>;
+    else if(this.props.error) return <h1 className="offers">Error occured: {this.props.error.toString()}</h1>
     else return (
       <React.Fragment>
         <DetailedCard
-          title={this.state.offerData.name} text={this.state.offerData.description}
-          footer={`Price per unit: ${this.state.offerData.price} UAH`}
-          imageUrl={this.state.offerData.image_url}
+          title={this.props.offerData.name} text={this.props.offerData.description}
+          footer={`Price per unit: ${this.props.offerData.price} UAH`}
+          imageUrl={this.props.offerData.image_url}
         />
         <div className="comment__section">
           <CommentForm
@@ -149,9 +117,11 @@ class OfferPage extends Component {
             handleSortClick={this.handleSortClick}
             handleSubmit={this.handleSubmit}
             state={this.state}
+            isFetchingInsert={this.props.isFetchingInsert}
+            loggedInUser={this.props.loggedInUser}
           />
           <CommentSection 
-            comments={this.state.offerData.comments} 
+            comments={this.props.offerData.comments} 
             per_page={this.PER_PAGE}
             page={this.state.activePage}
             ascendingOrder={this.state.ascendingOrder}
@@ -164,7 +134,7 @@ class OfferPage extends Component {
               linkClass="page-link"
               activeClass="page-item active"
               itemsCountPerPage={this.PER_PAGE}
-              totalItemsCount={this.state.offerData.comments.length}
+              totalItemsCount={this.props.offerData.comments.length}
               pageRangeDisplayed={this.PAGE_RANGE}
               onChange={this.handlePageChange}
             /> 

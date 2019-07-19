@@ -49,7 +49,7 @@ function PurchaseForm(props) {
     </Form.Row>
 
     <Form.Group className="purchase-modal" id="formGridCheckbox">
-      <Form.Check tclassName="purchase-modal" ype="checkbox" label="Check me out" />
+      <Form.Check className="purchase-modal" ype="checkbox" label="Check me out" />
     </Form.Group>
 
     <Button className="purchase-modal" variant="primary" onClick={props.onHide}>

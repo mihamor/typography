@@ -17,9 +17,6 @@ const sides = {
 class CustomNavbar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loggedInUser : props.user
-    }
     this.uiConfig = {
       signInFlow: "popup",
       signInOptions: DB.getAuthProviders(),
@@ -28,18 +25,9 @@ class CustomNavbar extends Component {
       }
     }
   }
-
-  static getDerivedStateFromProps(nextProps, prevState){
-    if(nextProps.loggedInUser !== prevState.loggedInUser){
-      return { 
-        loggedInUser : nextProps.loggedInUser
-      };
-    }  else return null;
-  }
-
   render() {
 
-    const isSignedIn = !!this.state.loggedInUser;
+    const isSignedIn = !!this.props.loggedInUser;
     return (
     <div className="header">
       <PhotoSlider/>
@@ -60,7 +48,7 @@ class CustomNavbar extends Component {
                   <Navbar.Text>
                     Signed in as:
                   </Navbar.Text>  
-                  <NavDropdown title={this.state.loggedInUser.name} id="basic-nav-dropdown">
+                  <NavDropdown title={this.props.loggedInUser.name} id="basic-nav-dropdown">
                     <NavDropdown.Item onClick={() => DB.signOut()}>Sign out</NavDropdown.Item>
                   </NavDropdown>
                 </React.Fragment>) : (
