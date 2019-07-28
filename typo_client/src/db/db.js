@@ -48,7 +48,6 @@ class DB {
     .then(querySnapshot => {
       const offersArray = [];
       querySnapshot.forEach(function(doc) {
-        console.log(doc.id, " => ", doc.data());
         offersArray.push({ id : doc.id, data : doc.data() });
       });
       return offersArray;
@@ -77,7 +76,6 @@ class DB {
         comments.push({ id : comment.id, data: comment.data()});
       });
       result.comments = comments;
-      console.log("populated", result);
     } else throw new Error("No such offer");
     return result;
   }
