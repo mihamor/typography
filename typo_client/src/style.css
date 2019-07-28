@@ -76,7 +76,6 @@ html{
   cursor: pointer;
 }
 
-
 .card_scale:hover{
   transform: scale(1.03);
   -webkit-transform: scale(1.03);
