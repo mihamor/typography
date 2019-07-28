@@ -1,10 +1,15 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
-import { Link } from 'react-router-dom';
+import useReactRouter from 'use-react-router';
+
 
 function CustomCard({title, text, footer, imageUrl, id}){
+  const { history } = useReactRouter();
+  const onCardClick = () => {
+    history.push(`/offers/${id}`);
+  }
   return (
-  <Card className="card card_bounds">
+  <Card onClick={onCardClick} className="card card_bounds card_scale">
     <Card.Img variant="top" className="card__img" src={imageUrl} />
     <Card.Body>
       <Card.Title className="card__heading">{title}</Card.Title>
@@ -13,7 +18,7 @@ function CustomCard({title, text, footer, imageUrl, id}){
       </Card.Text>
     </Card.Body>
     <Card.Footer>
-      <Link to={`/offers/${id}`}><small className="text-muted card__footer">{footer}</small></Link>
+      <small className="text-muted card__footer">{footer}</small>
     </Card.Footer>
   </Card>);
 }

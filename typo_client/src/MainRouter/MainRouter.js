@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Home from '../Home/Home';
 import Contact from '../Contact/Contact';
 import { withRouter } from 'react-router-dom';
-import images from './images';
+import images from './images/images';
 import Offers from '../Offers/Offers';
 import OfferPage from '../OfferPage/OfferPage';
 

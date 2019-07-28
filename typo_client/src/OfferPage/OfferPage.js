@@ -26,6 +26,7 @@ class OfferPage extends Component {
     this.subcribeToOfferChange = this.subcribeToOfferChange.bind(this);
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handleSortClick = this.handleSortClick.bind(this);
+
     this.unsubscribe = null;
     this.PER_PAGE = 5;
     this.PAGE_RANGE = 5;

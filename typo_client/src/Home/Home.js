@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Gallery from 'react-grid-gallery';
 import captionStyle from './caption';
 import { Parallax, Background } from 'react-parallax';
+import parallax_item from './images/parallax-item.png'
+import bg_parallax from './images/bg-parallax.jpg';
 
 
 class Home extends Component {
@@ -32,7 +34,7 @@ class Home extends Component {
     <div className="home">
       <Parallax
         blur={10}
-        bgImage={process.env.PUBLIC_URL + "bg-parallax.jpg"}
+        bgImage={bg_parallax}
         bgImageAlt="Paralax"
         strength={200}
       >
@@ -51,7 +53,7 @@ class Home extends Component {
           </section>
         </div>
         <Background className="parallax__item">
-          <img src={process.env.PUBLIC_URL + "parallax-item.png"} alt="parallax bro" />
+          <img src={parallax_item} alt="parallax bro" />
         </Background>
       </Parallax>
       <div className="expamles">

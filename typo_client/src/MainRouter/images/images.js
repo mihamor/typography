@@ -1,11 +1,11 @@
-import kvartal from '../../public/kvartal.jpg';
-import kvartal_full from '../../public/kvartal_full.jpg';
-import murakami from '../../public/murakami.jpg';
-import murakami_full from '../../public/murakami_full.jpg';
-import silpo from '../../public/silpo.jpg';
-import silpo_full from '../../public/silpo_full.jpg';
-import toyota from '../../public/toyota.jpg';
-import toyota_full from '../../public/toyota_full.jpg';
+import kvartal from './kvartal.jpg';
+import kvartal_full from './kvartal_full.jpg';
+import murakami from './murakami.jpg';
+import murakami_full from './murakami_full.jpg';
+import silpo from './silpo.jpg';
+import silpo_full from './silpo_full.jpg';
+import toyota from './toyota.jpg';
+import toyota_full from './toyota_full.jpg';
 
 const images =
 [{

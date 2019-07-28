@@ -2,9 +2,9 @@ import React from 'react';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-import typo from '../../public/typo.jpg';
-import books from '../../public/books.jpg';
-import pencils from '../../public/pencils.jpg';
+import typo from './images/typo.jpg';
+import books from './images/books.jpg';
+import pencils from './images/pencils.jpg';
 
 function PhotoSlider(){
   const settings = {
