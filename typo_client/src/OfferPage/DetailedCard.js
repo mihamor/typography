@@ -16,7 +16,7 @@ class DetailedCard extends Component {
     <div className='card__container'>
       <Card className="text-center">
         <Card.Header>{title}</Card.Header>
-        <Card.Img variant="top" className="card__full-img" src={`${process.env.PUBLIC_URL}/${imageUrl}`} />
+        <Card.Img variant="top" className="card__full-img" src={imageUrl} />
         <Card.Body>
           <Card.Title>{title}</Card.Title>
           <Card.Text>

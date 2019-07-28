@@ -21,10 +21,7 @@ const store = createStore(
   )
 );
 
-DB.getAuthInstance().onAuthStateChanged(user => {
-  store.dispatch(receiveUser(user));
-  console.log("user", user);
-});
+DB.getAuthInstance().onAuthStateChanged(user => store.dispatch(receiveUser(user)));
 
 ReactDOM.render((
   <Provider store={store}>

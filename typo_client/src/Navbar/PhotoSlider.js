@@ -2,6 +2,9 @@ import React from 'react';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import typo from '../../public/typo.jpg';
+import books from '../../public/books.jpg';
+import pencils from '../../public/pencils.jpg';
 
 function PhotoSlider(){
   const settings = {
@@ -19,13 +22,13 @@ function PhotoSlider(){
     <div className="slider">
       <Slider {...settings}>
         <div className="slider__element">
-          <img className="slider__img" src={process.env.PUBLIC_URL + "/typo.jpg"} alt="Printing"></img>
+          <img className="slider__img" src={typo} alt="Printing"></img>
         </div>
         <div className="slider__element">
-          <img className="slider__img" src={process.env.PUBLIC_URL + "/books.jpg"} alt="Books"></img>
+          <img className="slider__img" src={books} alt="Books"></img>
         </div>
         <div className="slider__element">
-          <img className="slider__img" src={process.env.PUBLIC_URL + "/pencils.jpg"} alt="Pencils"></img>
+          <img className="slider__img" src={pencils} alt="Pencils"></img>
         </div>
       </Slider>
     </div>
